@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Ewkoll</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://knowledge.ewkoll.com/"/>
+  <updated>2020-07-01T02:40:34.237Z</updated>
+  <id>http://knowledge.ewkoll.com/</id>
+  
+  <author>
+    <name>ideath@operatorworld.com</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Tesseract识别</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/30/Tesseract%E8%AF%86%E5%88%AB/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/30/Tesseract%E8%AF%86%E5%88%AB/</id>
+    <published>2020-06-30T08:09:19.000Z</published>
+    <updated>2020-07-01T02:40:34.237Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="安装jTessBoxEditor工具"><a href="#安装jTessBoxEditor工具" class="headerlink" title="安装jTessBoxEditor工具"></a>安装jTessBoxEditor工具</h2><ol><li><a href="https://sourceforge.net/projects/vietocr/files/jTessBoxEditor/" target="_blank" rel="noopener">工具下载地址</a>，FX版本需要OracleJDK所以如果下载运行不了，尝试另外一个版本。</li><li>执行train或者train.bat</li></ol><h2 id="准备样本数"><a href="#准备样本数" class="headerlink" title="准备样本数"></a>准备样本数</h2><ol><li>可以使用WebDriver程序，获取对应需要识别网站的数据。</li><li>把png文件转换成tiff文件。</li></ol><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">png2tiff</span><span class="params">(path)</span>:</span></span><br><span class="line">    tiff_path = os.path.join(path, <span class="string">"tiff"</span>)</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">not</span> (os.path.exists(tiff_path))):</span><br><span class="line">        os.mkdir(tiff_path)</span><br><span class="line"></span><br><span class="line">    imgList = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> imgList:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            image_path = os.path.join(path, name)</span><br><span class="line">            <span class="keyword">if</span> os.path.isdir(image_path):</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            images = Image.open(image_path)</span><br><span class="line">            file_name, file_type = os.path.splitext(name)</span><br><span class="line">            <span class="keyword">if</span> file_type == <span class="string">'tiff'</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                file_path = os.path.join(path, <span class="string">"./tiff/%s.tiff"</span> % (file_name))</span><br><span class="line">                images.save(file_path, format=<span class="string">'tiff'</span>)</span><br><span class="line">        <span class="keyword">except</span> IOError <span class="keyword">as</span> e:</span><br><span class="line">            print(e)</span><br><span class="line">            print(<span class="string">"one file was ignored"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">png2tiff(sys.argv[<span class="number">1</span>])</span><br></pre></td></tr></table></figure><ol start="3"><li>执行python png2tiff.py $PATH</li></ol><h2 id="合并样本数据"><a href="#合并样本数据" class="headerlink" title="合并样本数据"></a>合并样本数据</h2><ol><li>使用jTessBoxEditor即可合并图片。 #TODO 这个工具太难用了，自己搞个最好。</li></ol><h2 id="生成Box文件"><a href="#生成Box文件" class="headerlink" title="生成Box文件"></a>生成Box文件</h2><ol><li>tesseract eng.normal.exp0.tif eng.normal.exp0 batch.nochop makebox</li></ol><h2 id="字符位置校正"><a href="#字符位置校正" class="headerlink" title="字符位置校正"></a>字符位置校正</h2><ol><li>这个工具手段校正真TMD难用。</li></ol><h2 id="生成TR文件"><a href="#生成TR文件" class="headerlink" title="生成TR文件"></a>生成TR文件</h2><ol><li>tesseract eng.normal.exp0.tif eng.normal.exp0 nobatch box.train</li></ol><h2 id="增加字体特征文件"><a href="#增加字体特征文件" class="headerlink" title="增加字体特征文件"></a>增加字体特征文件</h2><ol><li>echo font 0 0 0 0 0 &gt; font_properties</li></ol><h2 id="提取字符"><a href="#提取字符" class="headerlink" title="提取字符"></a>提取字符</h2><ol><li>unicharset_extractor eng.normal.exp0.box</li></ol><h2 id="生成shape文件"><a href="#生成shape文件" class="headerlink" title="生成shape文件"></a>生成shape文件</h2><ol><li>shapeclustering -F font_properties -U unicharset eng.normal.exp0.tr</li></ol><h2 id="生成聚集字符特征文件"><a href="#生成聚集字符特征文件" class="headerlink" title="生成聚集字符特征文件"></a>生成聚集字符特征文件</h2><ol><li>mftraining -F font_properties -U unicharset -O unicharset eng.normal.exp0.tr</li></ol><h2 id="合并所有tr文件"><a href="#合并所有tr文件" class="headerlink" title="合并所有tr文件"></a>合并所有tr文件</h2><ol><li>cntraining eng.normal.exp0.tr</li></ol><h2 id="修改文件名"><a href="#修改文件名" class="headerlink" title="修改文件名"></a>修改文件名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mv inttemp eng.normal.inttemp</span><br><span class="line">mv normproto eng.normal.normproto</span><br><span class="line">mv pffmtable eng.normal.pffmtable</span><br><span class="line">mv shapetable eng.normal.shapetable</span><br><span class="line">mv unicharset eng.normal.unicharset</span><br></pre></td></tr></table></figure><h2 id="生成训练结果文件"><a href="#生成训练结果文件" class="headerlink" title="生成训练结果文件"></a>生成训练结果文件</h2><ol><li>combine_tessdata eng.normal</li></ol><h2 id="拷贝文件到tessdata目录"><a href="#拷贝文件到tessdata目录" class="headerlink" title="拷贝文件到tessdata目录"></a>拷贝文件到tessdata目录</h2><ol><li>cp eng.normal.traineddata /usr/local/share/tessdata</li></ol><h2 id="测试图像识别"><a href="#测试图像识别" class="headerlink" title="测试图像识别"></a>测试图像识别</h2><ol><li>tesseract captcha1592358516333.png  result -l eng.normal</li></ol><p><em>识别率非常感人的低，入门的使用！</em></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;安装jTessBoxEditor工具&quot;&gt;&lt;a href=&quot;#安装jTessBoxEditor工具&quot; class=&quot;headerlink&quot; title=&quot;安装jTessBoxEditor工具&quot;&gt;&lt;/a&gt;安装jTessBoxEditor工具&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>常识</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/15/%E5%B8%B8%E8%AF%86/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/15/%E5%B8%B8%E8%AF%86/</id>
+    <published>2020-06-15T07:06:39.000Z</published>
+    <updated>2020-06-15T07:07:09.859Z</updated>
+    
+    <content type="html"><![CDATA[<p>英文缩写    英文    中文<br>DEV    development    开发<br>SIT    System Integrate Test    系统整合测试（内测）<br>UAT    User Acceptance Test    用户验收测试<br>PET    Performance Evaluation Test    性能评估测试（压测）<br>SIM    simulation    仿真<br>PRD/PROD    production    产品/正式/生产</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;英文缩写    英文    中文&lt;br&gt;DEV    development    开发&lt;br&gt;SIT    System Integrate Test    系统整合测试（内测）&lt;br&gt;UAT    User Acceptance Test    用户验收测试&lt;br&gt;PE
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Postgres相关</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/11/Postgres%E7%9B%B8%E5%85%B3/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/11/Postgres%E7%9B%B8%E5%85%B3/</id>
+    <published>2020-06-11T10:12:06.000Z</published>
+    <updated>2020-06-11T10:17:02.115Z</updated>
+    
+    <content type="html"><![CDATA[<p>brew install postgresql  </p><p>初始化数据库</p><p>initdb /usr/local/var/postgres -E utf8</p><p>创建一个数据库用户</p><p>createuser postgres -P</p><p>创建数据库</p><p>createdb dbname -O username -E UTF8 -e </p><p>———一些有用的命令———</p><p>手动启动数据库</p><p>pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start</p><p>远程导出表结构和数据</p><p>pg_dump -h 104.236.131.89 hold -U hold -p 5432 -f hold.dump </p><p>远程导出表结构</p><p>pg_dump -s -h 104.236.131.89 hold -U hold -p 5432 -f hold.dump</p><p>导入本地数据库</p><p>psql -h 0.0.0.0 hold -U hold -p 5432 -f hold.dump  </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;brew install postgresql  &lt;/p&gt;
+&lt;p&gt;初始化数据库&lt;/p&gt;
+&lt;p&gt;initdb /usr/local/var/postgres -E utf8&lt;/p&gt;
+&lt;p&gt;创建一个数据库用户&lt;/p&gt;
+&lt;p&gt;createuser postgres -P&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>测试指标</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/05/%E6%B5%8B%E8%AF%95%E6%8C%87%E6%A0%87/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/05/%E6%B5%8B%E8%AF%95%E6%8C%87%E6%A0%87/</id>
+    <published>2020-06-05T03:14:10.000Z</published>
+    <updated>2020-06-05T03:25:43.433Z</updated>
+    
+    <content type="html"><![CDATA[<p>QPS每秒查询率(Query Per Second)<br>TPS是Transactions Per Second的缩写，也就是事务数/秒。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;QPS每秒查询率(Query Per Second)&lt;br&gt;TPS是Transactions Per Second的缩写，也就是事务数/秒。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>删除Mac的DNS缓存</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/04/%E5%88%A0%E9%99%A4Mac%E7%9A%84DNS%E7%BC%93%E5%AD%98/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/04/%E5%88%A0%E9%99%A4Mac%E7%9A%84DNS%E7%BC%93%E5%AD%98/</id>
+    <published>2020-06-04T10:02:25.000Z</published>
+    <updated>2020-06-17T14:29:15.256Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo killall -HUP mDNSResponder</span><br><span class="line">sudo killall mDNSResponderHelper</span><br><span class="line">sudo dscacheutil -flushcache</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=
+      
+    
+    </summary>
+    
+    
+      <category term="其它" scheme="http://knowledge.ewkoll.com/categories/%E5%85%B6%E5%AE%83/"/>
+    
+    
+      <category term="杂项" scheme="http://knowledge.ewkoll.com/tags/%E6%9D%82%E9%A1%B9/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue相关</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/04/Vue%E7%9B%B8%E5%85%B3/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/04/Vue%E7%9B%B8%E5%85%B3/</id>
+    <published>2020-06-04T06:51:43.000Z</published>
+    <updated>2020-06-05T08:11:35.639Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Vue-cli"><a href="#Vue-cli" class="headerlink" title="Vue cli"></a>Vue cli</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">安装</span><br><span class="line">npm install -g @vue&#x2F;cli --force</span><br><span class="line"></span><br><span class="line">创建项目</span><br><span class="line">vue ui 或者 vue create project_name</span><br><span class="line"></span><br><span class="line">全局配置信息</span><br><span class="line">vue config</span><br></pre></td></tr></table></figure><p>vue.config.js</p><h3 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 安装prettier</span><br><span class="line">npm install --save-dev prettier</span><br><span class="line">npm install --save-dev eslint-plugin-prettier</span><br></pre></td></tr></table></figure><h2 id="Babel"><a href="#Babel" class="headerlink" title="Babel"></a>Babel</h2><p><a href="https://babeljs.io/docs/en/" target="_blank" rel="noopener">Babel</a> 是一个javascript的编译器。<br><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/babel-preset-app" target="_blank" rel="noopener">@vue/babel-preset-app</a></p><h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>e2e 端到端的黑盒测试。</p><p><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-e2e-nightwatch" target="_blank" rel="noopener"></a></p><h3 id="查看配置"><a href="#查看配置" class="headerlink" title="查看配置"></a>查看配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue inspect &gt; output.js</span><br></pre></td></tr></table></figure><h3 id="Http客户端"><a href="#Http客户端" class="headerlink" title="Http客户端"></a>Http客户端</h3><p><a href="https://github.com/axios/axios" target="_blank" rel="noopener">axios</a><br><a href="https://github.com/visionmedia/superagent" target="_blank" rel="noopener">superagent</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;Vue-cli&quot;&gt;&lt;a href=&quot;#Vue-cli&quot; class=&quot;headerlink&quot; title=&quot;Vue cli&quot;&gt;&lt;/a&gt;Vue cli&lt;/h2&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=
+      
+    
+    </summary>
+    
+    
+      <category term="Vue基础知识" scheme="http://knowledge.ewkoll.com/categories/Vue%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    
+      <category term="Web" scheme="http://knowledge.ewkoll.com/tags/Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mocha测试</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/02/Mocha%E6%B5%8B%E8%AF%95/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/02/Mocha%E6%B5%8B%E8%AF%95/</id>
+    <published>2020-06-02T08:58:03.000Z</published>
+    <updated>2020-06-02T08:58:21.664Z</updated>
+    
+    <content type="html"><![CDATA[<p>BDD<br>TDD</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;BDD&lt;br&gt;TDD&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Jekyllcn</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/02/Jekyllcn/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/02/Jekyllcn/</id>
+    <published>2020-06-02T03:02:37.000Z</published>
+    <updated>2020-06-02T03:05:13.595Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://jekyllcn.com/" target="_blank" rel="noopener">Jekyllcn</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gem install jekyll bundler</span><br><span class="line"></span><br><span class="line">jekyll new my-awesome-site</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> my-awesome-site</span><br><span class="line"></span><br><span class="line">bundle install</span><br><span class="line"></span><br><span class="line">bundle <span class="built_in">exec</span> jekyll serve</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;http://jekyllcn.com/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Jekyllcn&lt;/a&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutte
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Ruby</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/02/Ruby/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/02/Ruby/</id>
+    <published>2020-06-02T02:39:19.000Z</published>
+    <updated>2020-06-02T02:50:52.031Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://gems.ruby-china.com/" target="_blank" rel="noopener">源切换</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gem update --system</span><br><span class="line">gem -v</span><br><span class="line"></span><br><span class="line">gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/</span><br><span class="line">gem sources -l</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://gems.ruby-china.com/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;源切换&lt;/a&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gu
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Caliper区块链性能测试工具</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/02/Caliper%E5%8C%BA%E5%9D%97%E9%93%BE%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/02/Caliper%E5%8C%BA%E5%9D%97%E9%93%BE%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</id>
+    <published>2020-06-02T01:43:32.000Z</published>
+    <updated>2020-06-02T07:37:15.143Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="初始化工程"><a href="#初始化工程" class="headerlink" title="初始化工程"></a>初始化工程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 初始化工程</span><br><span class="line">npm init 或者 npm init -y</span><br><span class="line"></span><br><span class="line"># 安装</span><br><span class="line">npm install --only&#x3D;prod @hyperledger&#x2F;caliper-cli@0.3.0</span><br><span class="line"></span><br><span class="line"># 绑定SDK版本</span><br><span class="line">npx caliper bind --caliper-bind-sut fabric:1.4.5</span><br></pre></td></tr></table></figure><h2 id="命令提示"><a href="#命令提示" class="headerlink" title="命令提示"></a>命令提示</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npx caliper --version</span><br><span class="line">npx caliper --help</span><br><span class="line">npx caliper bind --help</span><br><span class="line">npx caliper benchmark run --help</span><br></pre></td></tr></table></figure><h2 id="Fabric的版本"><a href="#Fabric的版本" class="headerlink" title="Fabric的版本"></a>Fabric的版本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http:&#x2F;&#x2F;bit.ly&#x2F;2ysbOFE | bash -s -- 1.4.7 1.4.7 0.4.20 -ds</span><br><span class="line">curl -sSL http:&#x2F;&#x2F;bit.ly&#x2F;2ysbOFE | bash -s -- 1.4.6 1.4.6 0.4.18 -ds</span><br></pre></td></tr></table></figure><h2 id=""><a href="#" class="headerlink" title=""></a></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npx caliper launch master \</span><br><span class="line">    --caliper-workspace . \</span><br><span class="line">    --caliper-benchconfig benchmarks&#x2F;scenario&#x2F;simple&#x2F;config.yaml \</span><br><span class="line">    --caliper-networkconfig networks&#x2F;fabric&#x2F;fabric-v1.4.4&#x2F;2org1peercouchdb_raft&#x2F;fabric-go-tls-solo.yaml</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;初始化工程&quot;&gt;&lt;a href=&quot;#初始化工程&quot; class=&quot;headerlink&quot; title=&quot;初始化工程&quot;&gt;&lt;/a&gt;初始化工程&lt;/h2&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Gulp</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/01/Gulp/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/01/Gulp/</id>
+    <published>2020-06-01T03:12:14.000Z</published>
+    <updated>2020-06-01T07:00:14.080Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://www.gulpjs.com.cn/" target="_blank" rel="noopener">Gulp</a></p><p><a href="https://www.gulpjs.com.cn/docs/getting-started/quick-start/" target="_blank" rel="noopener">安装</a></p><h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><h2 id="Scss"><a href="#Scss" class="headerlink" title="Scss"></a>Scss</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install node-sass gulp-sass --save-dev</span><br></pre></td></tr></table></figure><h2 id="缩小css"><a href="#缩小css" class="headerlink" title="缩小css"></a>缩小css</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp-clean-css --save-dev</span><br></pre></td></tr></table></figure><h2 id="源码映射"><a href="#源码映射" class="headerlink" title="源码映射"></a>源码映射</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp-sourcemaps --save-dev</span><br><span class="line">npm install fibers</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://www.gulpjs.com.cn/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Gulp&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.gulpjs.com.cn/docs/getting-start
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Mermaid</title>
+    <link href="http://knowledge.ewkoll.com/2020/06/01/Mermaid/"/>
+    <id>http://knowledge.ewkoll.com/2020/06/01/Mermaid/</id>
+    <published>2020-06-01T02:06:17.000Z</published>
+    <updated>2020-06-02T02:59:53.279Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://mermaid-js.github.io/mermaid/#/flowchart" target="_blank" rel="noopener">Mermaid</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://mermaid-js.github.io/mermaid/#/flowchart&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Mermaid&lt;/a&gt;&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Java相关</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/27/Java%E7%9B%B8%E5%85%B3/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/27/Java%E7%9B%B8%E5%85%B3/</id>
+    <published>2020-05-27T02:30:20.000Z</published>
+    <updated>2020-05-28T09:25:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">brew search maven</span><br><span class="line">brew info maven</span><br><span class="line">brew install maven</span><br><span class="line">brew remove maven</span><br><span class="line">brew cleanup</span><br><span class="line">brew list          列出已安装的软件</span><br><span class="line">brew update        更新brew</span><br><span class="line">brew home          用浏览器打开brew的官方网站</span><br><span class="line">brew info          显示软件信息</span><br><span class="line">brew deps          显示包依赖</span><br></pre></td></tr></table></figure><ul><li>修改Maven国内源</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">brew 安装目录下查找maven的conf目录中settings.xml文件修改。</span><br><span class="line"></span><br><span class="line">&lt;mirrors&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">        &lt;id&gt;alimaven&lt;&#x2F;id&gt;</span><br><span class="line">        &lt;name&gt;aliyun maven&lt;&#x2F;name&gt;</span><br><span class="line">        &lt;url&gt;http:&#x2F;&#x2F;maven.aliyun.com&#x2F;nexus&#x2F;content&#x2F;groups&#x2F;public&#x2F;&lt;&#x2F;url&gt;</span><br><span class="line">        &lt;mirrorOf&gt;central&lt;&#x2F;mirrorOf&gt;</span><br><span class="line">    &lt;&#x2F;mirror&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">        &lt;id&gt;alimaven&lt;&#x2F;id&gt;</span><br><span class="line">        &lt;mirrorOf&gt;central&lt;&#x2F;mirrorOf&gt;</span><br><span class="line">        &lt;name&gt;aliyun maven&lt;&#x2F;name&gt;</span><br><span class="line">        &lt;url&gt;http:&#x2F;&#x2F;maven.aliyun.com&#x2F;nexus&#x2F;content&#x2F;repositories&#x2F;central&#x2F;&lt;&#x2F;url&gt;</span><br><span class="line">    &lt;&#x2F;mirror&gt;</span><br><span class="line">&lt;&#x2F;mirrors&gt;</span><br></pre></td></tr></table></figure><h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><h3 id="Value"><a href="#Value" class="headerlink" title="@Value"></a>@Value</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从配置文件中读取。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;PeerLocation&#125;"</span>)</span><br><span class="line"><span class="keyword">public</span> String PeerLocation;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户名</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"张三"</span>)</span><br><span class="line"><span class="keyword">private</span> String UserName;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 年龄</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"26"</span>)</span><br><span class="line"><span class="keyword">private</span> Integer Age;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从组件注入变量，这个必须是个公开的变量。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"#&#123;beanValue.AnotherValue&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String BeanValue;</span><br></pre></td></tr></table></figure><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanValue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"AnotherValue"</span>)</span><br><span class="line">    <span class="keyword">public</span> String AnotherValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="动态调用指令"><a href="#动态调用指令" class="headerlink" title="动态调用指令"></a>动态调用指令</h2><p>对应于class文件中CONSTANT_InvokeDynamic的指令。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicInvoke</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Runnable r = () -&gt; System.out.println(Arrays.toString(args));</span><br><span class="line">        r.run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">javac DynamicInvoke.java 生成<span class="class"><span class="keyword">class</span>文件。</span></span><br><span class="line"><span class="class"><span class="title">javap</span> -<span class="title">v</span> -<span class="title">p</span> <span class="title">DynamicInvoke</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line">public static void main(java.lang.String[]);</span><br><span class="line">    descriptor: ([Ljava/lang/String;)V</span><br><span class="line">    flags: (<span class="number">0x0009</span>) ACC_PUBLIC, ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">        stack=<span class="number">1</span>, locals=<span class="number">2</span>, args_size=<span class="number">1</span></span><br><span class="line">            <span class="number">0</span>: aload_0</span><br><span class="line">            1: invokedynamic #2,  0              // InvokeDynamic #0:run:([Ljava/lang/String;)Ljava/lang/Runnable;</span><br><span class="line">            <span class="number">6</span>: astore_1</span><br><span class="line">            <span class="number">7</span>: aload_1</span><br><span class="line">            8: invokeinterface #3,  1            // InterfaceMethod java/lang/Runnable.run:()V</span><br><span class="line">        <span class="number">13</span>: <span class="keyword">return</span></span><br><span class="line">        LineNumberTable:</span><br><span class="line">        line <span class="number">7</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">8</span>: <span class="number">7</span></span><br><span class="line">        line <span class="number">9</span>: <span class="number">13</span></span><br></pre></td></tr></table></figure><p>可以看到mian函数中存在对应的动态调用函数。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;环境搭建&lt;/h2&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pr
+      
+    
+    </summary>
+    
+    
+      <category term="Java" scheme="http://knowledge.ewkoll.com/categories/Java/"/>
+    
+    
+      <category term="Java" scheme="http://knowledge.ewkoll.com/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SQL注入</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/26/SQL%E6%B3%A8%E5%85%A5/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/26/SQL%E6%B3%A8%E5%85%A5/</id>
+    <published>2020-05-26T07:42:25.000Z</published>
+    <updated>2020-05-26T07:42:25.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>XSS原理</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/26/XSS%E5%8E%9F%E7%90%86/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/26/XSS%E5%8E%9F%E7%90%86/</id>
+    <published>2020-05-26T07:42:16.000Z</published>
+    <updated>2020-05-26T07:42:16.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>浏览器同源策略跨域</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/26/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E8%B7%A8%E5%9F%9F/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/26/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E8%B7%A8%E5%9F%9F/</id>
+    <published>2020-05-26T07:42:02.000Z</published>
+    <updated>2020-05-26T07:42:02.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>基数统计算法</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/26/%E5%9F%BA%E6%95%B0%E7%BB%9F%E8%AE%A1%E7%AE%97%E6%B3%95/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/26/%E5%9F%BA%E6%95%B0%E7%BB%9F%E8%AE%A1%E7%AE%97%E6%B3%95/</id>
+    <published>2020-05-26T06:23:04.000Z</published>
+    <updated>2020-05-26T07:38:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>redis pfadd</p><p>es</p><p>Hyperloglog 不精确去重算法，基于概率学的实现。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;redis pfadd&lt;/p&gt;
+&lt;p&gt;es&lt;/p&gt;
+&lt;p&gt;Hyperloglog 不精确去重算法，基于概率学的实现。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Go信号处理</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/25/Go%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/25/Go%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/</id>
+    <published>2020-05-25T10:10:21.000Z</published>
+    <updated>2020-05-26T07:35:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="常见信号"><a href="#常见信号" class="headerlink" title="常见信号"></a>常见信号</h3><table><thead><tr><th>ID</th><th align="left">Linux</th><th align="left">Desc</th></tr></thead><tbody><tr><td>1</td><td align="left">SIGHUP</td><td align="left">“hangup”-重启</td></tr><tr><td>2</td><td align="left">SIGINT</td><td align="left">“interrupt”-中断-<code>Ctrl + C</code></td></tr><tr><td>3</td><td align="left">SIGQUIT</td><td align="left">“quit”-退出-<code>Ctrl + /</code></td></tr><tr><td>4</td><td align="left">SIGILL</td><td align="left">“illegal instruction”-非法指令，错误修改代码段</td></tr><tr><td>5</td><td align="left">SIGTRAP</td><td align="left">“trace/BPT trap”-陷阱-<code>断点指令或其它trap指令产生,调试用途</code></td></tr><tr><td>6</td><td align="left">SIGABRT</td><td align="left">“abort trap”-<code>调用 abort 函数生成的信号</code></td></tr><tr><td>7</td><td align="left">SIGEMT</td><td align="left">“EMT trap”-内存越界</td></tr><tr><td>8</td><td align="left">SIGFPE</td><td align="left">“floating point exception”-浮点数异常</td></tr><tr><td>9</td><td align="left">SIGKILL</td><td align="left">“killed”-杀死进程信号</td></tr><tr><td>10</td><td align="left">SIGBUS</td><td align="left">“bus error”-总线错误</td></tr><tr><td>11</td><td align="left">SIGSEGV</td><td align="left">“segmentation fault”-段错误</td></tr><tr><td>12</td><td align="left">SIGSYS</td><td align="left">“bad system call”-错误系统调用</td></tr><tr><td>13</td><td align="left">SIGPIPE</td><td align="left">“broken pipe”-管道异常</td></tr><tr><td>14</td><td align="left">SIGALRM</td><td align="left">“alarm clock”-时钟</td></tr><tr><td>15</td><td align="left">SIGTERM</td><td align="left">“terminated”-中断</td></tr></tbody></table><p>1) SIGHUP （HUP Hangup）<br>重启</p><p>2) SIGINT （INT Interrupt）<br>程序终止( interrupt )信号, 在用户键入 INTR 字符(通常是 Ctrl + C )时发出，用于通知前台进程组终止进程。</p><p>3) SIGQUIT （QUIT Quit）<br>由 QUIT 字符(通常是 Ctrl + / )来控制. 进程在因收到 SIGQUIT 退出时会产生 core 文件, 在这个意义上类似于一个程序错误信号。</p><p>4) SIGILL （ILL Illegal instruction）<br>执行了非法指令. </p><p>5) SIGTRAP （TRAP Trap）<br>由断点指令或其它 trap 指令产生. 由debugger 使用。</p><p>6) SIGABRT （ABRT Aborted）<br>调用 abort 函数生成的信号。</p><p>7) SIGBUS （BUS Bus error）<br>非法地址, 包括内存地址对齐( alignment )出错。比如访问一个四个字长的整数, 但其地址不是 4 的倍数。它与 SIGSEGV 的区别在于后者是由于对合法存储地址的非法访问触发的(如访问不属于自己存储空间或只读存储空间)。</p><p>8) SIGFPE （FPE Floating point exception）<br>在发生致命的算术运算错误时发出. 不仅包括浮点运算错误, 还包括溢出及除数为0等其它所有的算术的错误。</p><p>9) SIGKILL （KILL Killed）<br>用来立即结束程序的运行。本信号不能被阻塞、处理和忽略。</p><p>10)  SIGUSR1 （USR1 User signal 1）<br>留给用户使用</p><p>11) SIGSEGV （SEGV Segmentation fault）<br>试图访问未分配给自己的内存, 或试图往没有写权限的内存地址写数据。</p><p>12) SIGUSR2 （USR2 User signal 2）<br>留给用户使用</p><p>13) SIGPIPE （PIPE Broken pipe）<br>管道破裂。这个信号通常在进程间通信产生，比如采用 FIFO (管道)通信的两个进程，读管道没打开或者意外终止就往管道写，写进程会收到 SIGPIPE 信号。此外用Socket 通信的两个进程，写进程在写 Socket 的时候，读进程已经终止。</p><p>14) SIGALRM （ALRM Alarm clock）<br>时钟定时信号。alarm 函数使用该信号。</p><p>15)  SIGTERM （TERM Terminated）<br>程序结束( terminate )信号, 与 SIGKILL 不同的是该信号可以被阻塞和处理。通常用来要求程序自己正常退出，shell 命令 kill 缺省产生这个信号。如果进程终止不了，我们才会尝试 SIGKILL。</p><p>17) SIGCHLD （CHLD Child exited）<br>子进程结束时, 父进程会收到这个信号。</p><p>如果父进程没有处理这个信号，也没有等待( wait )子进程，子进程虽然终止，但是还会在内核进程表中占有表项，这时的子进程称为僵尸进程。这种情况我们应该避免(父进程或者忽略 SIGCHILD 信号，或者捕捉它，或者 wait 它派生的子进程，或者父进程先终止，这时子进程的终止自动由 init 进程来接管)。</p><p>18) SIGCONT （CONT Continue）<br>让一个停止( stopped )的进程继续执行。本信号不能被阻塞。</p><p>1)  SIGSTOP （STOP Stopped (signal)）<br>停止( stopped )进程的执行。注意它和 terminate 以及 interrupt 的区别：该进程还未结束, 只是暂停执行。本信号不能被阻塞，处理或忽略。</p><p>20) SIGTSTP （TSTP Stopped）<br>停止进程的运行, 但该信号可以被处理和忽略。用户键入 SUSP 字符时(通常是 Ctrl + Z )发出这个信号。</p><p>21) SIGTTIN （TTIN Stopped (tty input)）<br>当后台作业要从用户终端读数据时，该作业中的所有进程会收到 SIGTTIN 信号。缺省时这些进程会停止执行。</p><p>22) SIGTTOU （TTOU Stopped (tty output)）<br>类似于 SIGTTIN，但在写终端(或修改终端模式)时收到。</p><p>23) SIGURG （URG Urgent I/O condition）<br>有“紧急”数据或 out-of-band 数据到达 socket 时产生。</p><p>24) SIGXCPU （XCPU CPU time limit exceeded）<br>超过 CPU 时间资源限制。这个限制可以由 getrlimit/setrlimit 来读取/改变。</p><p>25) SIGXFSZ （XFSZ File size limit exceeded）<br>当进程企图扩大文件以至于超过文件大小资源限制。</p><p>26) SIGVTALRM （VTALRM Virtual timer expired）<br>虚拟时钟信号。类似于 SIGALRM，但是计算的是该进程占用的 CPU 时间。</p><p>27) SIGPROF （PROF Profiling timer expired）<br>类似于 SIGALRM/SIGVTALRM，但包括该进程用的 CPU 时间以及系统调用的时间。</p><p>28) SIGWINCH （WINCH Window size changed）<br>窗口大小改变时发出。</p><p>29) SIGIO （IO I/O possible）<br>文件描述符准备就绪，可以开始进行输入/输出操作。</p><p>30) SIGPWR （PWR Power failure）<br>Power failure</p><p>31) SIGSYS （SYS Bad system call）<br>非法的系统调用。</p><ul><li>程序不可捕获、阻塞或忽略的信号有：SIGKILL,SIGSTOP</li><li>不能恢复至默认动作的信号有：SIGILL,SIGTRAP</li><li>默认会导致进程流产的信号有：SIGABRT,SIGBUS,SIGFPE,SIGILL,SIGIOT,SIGQUIT,SIGSEGV,SIGTRAP,SIGXCPU,SIGXFSZ</li><li>默认会导致进程退出的信号有：SIGALRM,SIGHUP,SIGINT,SIGKILL,SIGPIPE,SIGPOLL,SIGPROF,SIGSYS,SIGTERM,SIGUSR1,SIGUSR2,SIGVTALRM</li><li>默认会导致进程停止的信号有：SIGSTOP,SIGTSTP,SIGTTIN,SIGTTOU</li><li>默认进程忽略的信号有：SIGCHLD,SIGPWR,SIGURG,SIGWINCH</li><li>此外，SIGIO 在 SVR4 是退出，在 4.3BSD 中是忽略；SIGCONT 在进程挂起时是继续，否则是忽略，不能被阻塞。</li></ul><h3 id="Go信号处理"><a href="#Go信号处理" class="headerlink" title="Go信号处理"></a>Go信号处理</h3><ul><li>通常应用程序需要处理以下信号：<ul><li>SIGHUP <ul><li>重启信号，一般用于进程正常的重新加载配置文件后正常启动。</li></ul></li><li>SIGINT<ul><li>拦截前台程序意外的使用<code>Ctrl + C</code>导致程序中断。</li></ul></li><li>SIGQUIT<ul><li>拦截前台程序意外的使用<code>Ctrl + /</code>导致程序中断。</li></ul></li><li>SIGTSTP<ul><li>拦截前台程序意外的使用<code>Ctrl + Z</code>导致程序暂停。</li></ul></li><li>SIGTERM<ul><li>处理程序的正常退出流程。</li></ul></li></ul></li></ul><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line"><span class="string">"os"</span></span><br><span class="line"><span class="string">"os/signal"</span></span><br><span class="line"><span class="string">"syscall"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetStartTime</span><span class="params">()</span></span> &#123;</span><br><span class="line">pid := os.Getpid()</span><br><span class="line">ppid := os.Getppid()</span><br><span class="line">fmt.Printf(<span class="string">"进程 PID: %d PPID: %d \n"</span>, pid, ppid)</span><br><span class="line"></span><br><span class="line">ppProcess, err := os.FindProcess(ppid)</span><br><span class="line"><span class="keyword">if</span> <span class="literal">nil</span> != err &#123;</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">fmt.Printf(<span class="string">"进程 PPID: %d \n"</span>, ppProcess.Pid)</span><br><span class="line"></span><br><span class="line">goProcess, err := os.StartProcess(<span class="string">"go"</span>, []<span class="keyword">string</span>&#123;<span class="string">"version"</span>&#125;, &amp;os.ProcAttr&#123;</span><br><span class="line">Dir: <span class="string">"/usr/local/go/bin/"</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">if</span> <span class="literal">nil</span> != err &#123;</span><br><span class="line">fmt.Println(err)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">fmt.Printf(<span class="string">"PID: %d\n"</span>, goProcess.Pid)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//err = ppProcess.Kill()</span></span><br><span class="line"><span class="comment">//if nil != err &#123;</span></span><br><span class="line"><span class="comment">//fmt.Println(err)</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> App <span class="keyword">interface</span> &#123;</span><br><span class="line">Start()</span><br><span class="line">Stop()</span><br><span class="line">ReStart()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> CommonApp <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(app *CommonApp)</span> <span class="title">Start</span><span class="params">()</span></span> &#123;</span><br><span class="line">fmt.Println(<span class="string">"Start"</span>)</span><br><span class="line">GetStartTime()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(app *CommonApp)</span> <span class="title">Stop</span><span class="params">()</span></span> &#123;</span><br><span class="line">fmt.Println(<span class="string">"Stop"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(app *CommonApp)</span> <span class="title">ReStart</span><span class="params">()</span></span> &#123;</span><br><span class="line">app.Stop()</span><br><span class="line">app.Start()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">comonApp := CommonApp&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> app App = &amp;comonApp</span><br><span class="line">Enter(app)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Enter</span><span class="params">(app App)</span></span> &#123;</span><br><span class="line">app.Start()</span><br><span class="line">exit := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">reload := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"><span class="keyword">go</span> ProcSignal(exit, reload)</span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-reload:</span><br><span class="line">app.ReStart()</span><br><span class="line"><span class="keyword">case</span> &lt;-exit:</span><br><span class="line">app.Stop()</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ProcSignal</span><span class="params">(exit <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, reload <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">signals := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal)</span><br><span class="line">signal.Notify(signals, syscall.SIGTSTP, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGUSR1, syscall.SIGUSR2, syscall.SIGHUP, syscall.SIGTERM)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">sig := &lt;-signals</span><br><span class="line">fmt.Println(<span class="string">"接收信号:"</span>, sig)</span><br><span class="line"><span class="keyword">if</span> sig == syscall.SIGTERM &#123;</span><br><span class="line">fmt.Println(<span class="string">"终止程序"</span>)</span><br><span class="line">signal.Stop(signals)</span><br><span class="line">exit &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> sig &#123;</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">fmt.Printf(<span class="string">"接收信号=%v\n"</span>, sig)</span><br><span class="line"><span class="keyword">case</span> syscall.SIGINT:</span><br><span class="line">fmt.Println(<span class="string">"中断信号"</span>)</span><br><span class="line"><span class="keyword">case</span> syscall.SIGTSTP:</span><br><span class="line">fmt.Println(<span class="string">"暂停信号"</span>)</span><br><span class="line"><span class="keyword">case</span> syscall.SIGQUIT:</span><br><span class="line">fmt.Println(<span class="string">"退出信号"</span>)</span><br><span class="line"><span class="keyword">case</span> syscall.SIGHUP:</span><br><span class="line">fmt.Println(<span class="string">"重启信号"</span>)</span><br><span class="line">reload &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line"><span class="keyword">case</span> syscall.SIGUSR1:</span><br><span class="line">fmt.Println(<span class="string">"用户信号-1"</span>)</span><br><span class="line"><span class="keyword">case</span> syscall.SIGUSR2:</span><br><span class="line">fmt.Println(<span class="string">"用户信号-2"</span>)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;常见信号&quot;&gt;&lt;a href=&quot;#常见信号&quot; class=&quot;headerlink&quot; title=&quot;常见信号&quot;&gt;&lt;/a&gt;常见信号&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ID&lt;/th&gt;
+&lt;th align=&quot;left&quot;&gt;Linux&lt;/th&gt;
+&lt;th 
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>OpenResty相关</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/21/OpenResty%E7%9B%B8%E5%85%B3/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/21/OpenResty%E7%9B%B8%E5%85%B3/</id>
+    <published>2020-05-21T08:28:14.000Z</published>
+    <updated>2020-05-26T07:37:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<img src="/2020/05/21/OpenResty%E7%9B%B8%E5%85%B3/1.png" class=""><h3 id="Nginx阶段"><a href="#Nginx阶段" class="headerlink" title="Nginx阶段"></a>Nginx阶段</h3><p>NGX_HTTP_POST_READ_PHASE: 接收完请求头之后的第一个阶段，它位于URI重写之前。</p><p>NGX_HTTP_SERVER_REWRITE_PHASE: 处理全局的(server block)的rewrite规则。Nginx会根据Host及端口找到对应的虚拟主机配置。</p><p>NGX_HTTP_FIND_CONFIG_PHASE: 寻找Location配置阶段，该阶段可能会被执行多次，因为也可能有Location级别的重写指令。</p><p>NGX_HTTP_REWRITE_PHASE: Location级别的uri重写阶段，该阶段执行Location基本的重写指令，也可能会被执行多次。</p><p>NGX_HTTP_POST_REWRITE_PHASE: Location级别重写的后一阶段，用来检查上阶段是否有Uri重写，并根据结果跳转到合适的阶段。</p><p>NGX_HTTP_PREACCESS_PHASE: 访问权限控制的前一阶段，该阶段在权限控制阶段之前，一般也用于访问控制，比如限制访问频率，链接数等。</p><p>NGX_HTTP_ACCESS_PHASE: 访问权限控制阶段，比如基于ip黑白名单的权限控制，基于用户名密码的权限控制等。</p><p>NGX_HTTP_POST_ACCESS_PHASE: 问权限控制的后一阶段，该阶段根据权限控制阶段的执行结果进行相应处理。</p><p>NGX_HTTP_TRY_FILES_PHASE: try_files指令的处理阶段，如果没有配置try_files指令，则该阶段被跳过</p><p>NGX_HTTP_CONTENT_PHASE: 内容生成阶段，该阶段产生响应，并发送到客户端</p><p>NGX_HTTP_LOG_PHASE: 日志记录阶段，该阶段记录访问日志</p><h3 id="OpenResty阶段"><a href="#OpenResty阶段" class="headerlink" title="OpenResty阶段"></a>OpenResty阶段</h3><ul><li><p>init_by_Lua：初始化Nginx和预加载Lua(Nginx启动和Reload时执行)</p><ul><li>Master进程执行<ul><li>启动阶段需要执行的代码。</li><li>初始化Nginx的共享内存。  </li></ul></li></ul></li><li><p>init_worker_by_lua*：每个工作进程(worker_processes)被创建时执行</p><ul><li>工作进程执行<ul><li>定时任务 </li><li>健康检查</li><li>定时获取配置信息。</li></ul></li></ul></li><li><p>ssl_certificate_by_lua*：对https请求的处理</p></li><li><p>set_by_lua*：设置 nginx 变量；</p></li><li><p>rewrite_by_lua*：重写请求;</p></li><li><p>access_by_lua*：访问控制（黑白名单）；</p></li><li><p>content_by_lua*：执行业务逻辑并产生响应；</p></li><li><p>balancer_by_lua*：负载均衡upstream中使用；</p></li><li><p>header_filter_by_lua*：过滤响应头；</p></li><li><p>body_filter_by_lua*：过滤响应体；</p></li><li><p>log_by_lua*：记录访问日志；</p></li></ul><p><a href="https://github.com/openresty/lua-nginx-module" target="_blank" rel="noopener">文档地址</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;img src=&quot;/2020/05/21/OpenResty%E7%9B%B8%E5%85%B3/1.png&quot; class=&quot;&quot;&gt;
+
+&lt;h3 id=&quot;Nginx阶段&quot;&gt;&lt;a href=&quot;#Nginx阶段&quot; class=&quot;headerlink&quot; title=&quot;Nginx阶段&quot;&gt;&lt;
+      
+    
+    </summary>
+    
+    
+      <category term="OpenResty" scheme="http://knowledge.ewkoll.com/categories/OpenResty/"/>
+    
+    
+      <category term="Nginx" scheme="http://knowledge.ewkoll.com/tags/Nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SSL/TLS认证</title>
+    <link href="http://knowledge.ewkoll.com/2020/05/20/TLS%E8%AE%A4%E8%AF%81/"/>
+    <id>http://knowledge.ewkoll.com/2020/05/20/TLS%E8%AE%A4%E8%AF%81/</id>
+    <published>2020-05-20T07:37:22.000Z</published>
+    <updated>2020-05-20T09:42:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>单向认证</p><p>双向认证</p><p>https单向认证，持有CA的证书信息。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;单向认证&lt;/p&gt;
+&lt;p&gt;双向认证&lt;/p&gt;
+&lt;p&gt;https单向认证，持有CA的证书信息。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+</feed>

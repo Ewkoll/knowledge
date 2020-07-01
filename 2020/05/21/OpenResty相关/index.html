@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>OpenResty相关 | Ewkoll</title>
+
+  
+  <meta name="author" content="ideath@operatorworld.com">
+  
+
+  
+  <meta name="description" content="knowledge">
+  
+
+  
+  
+  <meta name="keywords" content="Nginx">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="OpenResty相关"/>
+
+  <meta property="og:site_name" content="Ewkoll"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Ewkoll" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Ewkoll</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/atom.xml">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>OpenResty相关</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/21/OpenResty相关/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-21T08:28:14.000Z">
+          2020-05-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <img src="/2020/05/21/OpenResty%E7%9B%B8%E5%85%B3/1.png" class="">
+
+<h3 id="Nginx阶段"><a href="#Nginx阶段" class="headerlink" title="Nginx阶段"></a>Nginx阶段</h3><p>NGX_HTTP_POST_READ_PHASE: 接收完请求头之后的第一个阶段，它位于URI重写之前。</p>
+<p>NGX_HTTP_SERVER_REWRITE_PHASE: 处理全局的(server block)的rewrite规则。Nginx会根据Host及端口找到对应的虚拟主机配置。</p>
+<p>NGX_HTTP_FIND_CONFIG_PHASE: 寻找Location配置阶段，该阶段可能会被执行多次，因为也可能有Location级别的重写指令。</p>
+<p>NGX_HTTP_REWRITE_PHASE: Location级别的uri重写阶段，该阶段执行Location基本的重写指令，也可能会被执行多次。</p>
+<p>NGX_HTTP_POST_REWRITE_PHASE: Location级别重写的后一阶段，用来检查上阶段是否有Uri重写，并根据结果跳转到合适的阶段。</p>
+<p>NGX_HTTP_PREACCESS_PHASE: 访问权限控制的前一阶段，该阶段在权限控制阶段之前，一般也用于访问控制，比如限制访问频率，链接数等。</p>
+<p>NGX_HTTP_ACCESS_PHASE: 访问权限控制阶段，比如基于ip黑白名单的权限控制，基于用户名密码的权限控制等。</p>
+<p>NGX_HTTP_POST_ACCESS_PHASE: 问权限控制的后一阶段，该阶段根据权限控制阶段的执行结果进行相应处理。</p>
+<p>NGX_HTTP_TRY_FILES_PHASE: try_files指令的处理阶段，如果没有配置try_files指令，则该阶段被跳过</p>
+<p>NGX_HTTP_CONTENT_PHASE: 内容生成阶段，该阶段产生响应，并发送到客户端</p>
+<p>NGX_HTTP_LOG_PHASE: 日志记录阶段，该阶段记录访问日志</p>
+<h3 id="OpenResty阶段"><a href="#OpenResty阶段" class="headerlink" title="OpenResty阶段"></a>OpenResty阶段</h3><ul>
+<li><p>init_by_Lua：初始化Nginx和预加载Lua(Nginx启动和Reload时执行)</p>
+<ul>
+<li>Master进程执行<ul>
+<li>启动阶段需要执行的代码。</li>
+<li>初始化Nginx的共享内存。  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>init_worker_by_lua*：每个工作进程(worker_processes)被创建时执行</p>
+<ul>
+<li>工作进程执行<ul>
+<li>定时任务 </li>
+<li>健康检查</li>
+<li>定时获取配置信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>ssl_certificate_by_lua*：对https请求的处理</p>
+</li>
+<li><p>set_by_lua*：设置 nginx 变量；</p>
+</li>
+<li><p>rewrite_by_lua*：重写请求;</p>
+</li>
+<li><p>access_by_lua*：访问控制（黑白名单）；</p>
+</li>
+<li><p>content_by_lua*：执行业务逻辑并产生响应；</p>
+</li>
+<li><p>balancer_by_lua*：负载均衡upstream中使用；</p>
+</li>
+<li><p>header_filter_by_lua*：过滤响应头；</p>
+</li>
+<li><p>body_filter_by_lua*：过滤响应体；</p>
+</li>
+<li><p>log_by_lua*：记录访问日志；</p>
+</li>
+</ul>
+<p><a href="https://github.com/openresty/lua-nginx-module" target="_blank" rel="noopener">文档地址</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/OpenResty/">OpenResty</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comment" class="comment">
+		<div id="gitalk-container"></div>
+	</section>
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var gitalk = new Gitalk({
+			clientID: '6439928df4e0148ede52',
+			clientSecret: '05309198bf54b50a56b976deba7e9cb59fcdfd64',
+			repo: 'knowledge',
+			owner: 'Ewkoll',
+			admin: ['Ewkoll'],
+			id: decodeURI(location.pathname),
+			distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2020 ideath@operatorworld.com
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

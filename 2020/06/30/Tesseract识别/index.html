@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Tesseract识别 | Ewkoll</title>
+
+  
+  <meta name="author" content="ideath@operatorworld.com">
+  
+
+  
+  <meta name="description" content="knowledge">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Tesseract识别"/>
+
+  <meta property="og:site_name" content="Ewkoll"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Ewkoll" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Ewkoll</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/atom.xml">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Tesseract识别</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/30/Tesseract识别/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-30T08:09:19.000Z">
+          2020-06-30
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="安装jTessBoxEditor工具"><a href="#安装jTessBoxEditor工具" class="headerlink" title="安装jTessBoxEditor工具"></a>安装jTessBoxEditor工具</h2><ol>
+<li><a href="https://sourceforge.net/projects/vietocr/files/jTessBoxEditor/" target="_blank" rel="noopener">工具下载地址</a>，FX版本需要OracleJDK所以如果下载运行不了，尝试另外一个版本。</li>
+<li>执行train或者train.bat</li>
+</ol>
+<h2 id="准备样本数"><a href="#准备样本数" class="headerlink" title="准备样本数"></a>准备样本数</h2><ol>
+<li>可以使用WebDriver程序，获取对应需要识别网站的数据。</li>
+<li>把png文件转换成tiff文件。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">png2tiff</span><span class="params">(path)</span>:</span></span><br><span class="line">    tiff_path = os.path.join(path, <span class="string">"tiff"</span>)</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">not</span> (os.path.exists(tiff_path))):</span><br><span class="line">        os.mkdir(tiff_path)</span><br><span class="line"></span><br><span class="line">    imgList = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> imgList:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            image_path = os.path.join(path, name)</span><br><span class="line">            <span class="keyword">if</span> os.path.isdir(image_path):</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            images = Image.open(image_path)</span><br><span class="line">            file_name, file_type = os.path.splitext(name)</span><br><span class="line">            <span class="keyword">if</span> file_type == <span class="string">'tiff'</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                file_path = os.path.join(path, <span class="string">"./tiff/%s.tiff"</span> % (file_name))</span><br><span class="line">                images.save(file_path, format=<span class="string">'tiff'</span>)</span><br><span class="line">        <span class="keyword">except</span> IOError <span class="keyword">as</span> e:</span><br><span class="line">            print(e)</span><br><span class="line">            print(<span class="string">"one file was ignored"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">png2tiff(sys.argv[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>执行python png2tiff.py $PATH</li>
+</ol>
+<h2 id="合并样本数据"><a href="#合并样本数据" class="headerlink" title="合并样本数据"></a>合并样本数据</h2><ol>
+<li>使用jTessBoxEditor即可合并图片。 #TODO 这个工具太难用了，自己搞个最好。</li>
+</ol>
+<h2 id="生成Box文件"><a href="#生成Box文件" class="headerlink" title="生成Box文件"></a>生成Box文件</h2><ol>
+<li>tesseract eng.normal.exp0.tif eng.normal.exp0 batch.nochop makebox</li>
+</ol>
+<h2 id="字符位置校正"><a href="#字符位置校正" class="headerlink" title="字符位置校正"></a>字符位置校正</h2><ol>
+<li>这个工具手段校正真TMD难用。</li>
+</ol>
+<h2 id="生成TR文件"><a href="#生成TR文件" class="headerlink" title="生成TR文件"></a>生成TR文件</h2><ol>
+<li>tesseract eng.normal.exp0.tif eng.normal.exp0 nobatch box.train</li>
+</ol>
+<h2 id="增加字体特征文件"><a href="#增加字体特征文件" class="headerlink" title="增加字体特征文件"></a>增加字体特征文件</h2><ol>
+<li>echo font 0 0 0 0 0 &gt; font_properties</li>
+</ol>
+<h2 id="提取字符"><a href="#提取字符" class="headerlink" title="提取字符"></a>提取字符</h2><ol>
+<li>unicharset_extractor eng.normal.exp0.box</li>
+</ol>
+<h2 id="生成shape文件"><a href="#生成shape文件" class="headerlink" title="生成shape文件"></a>生成shape文件</h2><ol>
+<li>shapeclustering -F font_properties -U unicharset eng.normal.exp0.tr</li>
+</ol>
+<h2 id="生成聚集字符特征文件"><a href="#生成聚集字符特征文件" class="headerlink" title="生成聚集字符特征文件"></a>生成聚集字符特征文件</h2><ol>
+<li>mftraining -F font_properties -U unicharset -O unicharset eng.normal.exp0.tr</li>
+</ol>
+<h2 id="合并所有tr文件"><a href="#合并所有tr文件" class="headerlink" title="合并所有tr文件"></a>合并所有tr文件</h2><ol>
+<li>cntraining eng.normal.exp0.tr</li>
+</ol>
+<h2 id="修改文件名"><a href="#修改文件名" class="headerlink" title="修改文件名"></a>修改文件名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mv inttemp eng.normal.inttemp</span><br><span class="line">mv normproto eng.normal.normproto</span><br><span class="line">mv pffmtable eng.normal.pffmtable</span><br><span class="line">mv shapetable eng.normal.shapetable</span><br><span class="line">mv unicharset eng.normal.unicharset</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成训练结果文件"><a href="#生成训练结果文件" class="headerlink" title="生成训练结果文件"></a>生成训练结果文件</h2><ol>
+<li>combine_tessdata eng.normal</li>
+</ol>
+<h2 id="拷贝文件到tessdata目录"><a href="#拷贝文件到tessdata目录" class="headerlink" title="拷贝文件到tessdata目录"></a>拷贝文件到tessdata目录</h2><ol>
+<li>cp eng.normal.traineddata /usr/local/share/tessdata</li>
+</ol>
+<h2 id="测试图像识别"><a href="#测试图像识别" class="headerlink" title="测试图像识别"></a>测试图像识别</h2><ol>
+<li>tesseract captcha1592358516333.png  result -l eng.normal</li>
+</ol>
+<p><em>识别率非常感人的低，入门的使用！</em></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comment" class="comment">
+		<div id="gitalk-container"></div>
+	</section>
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var gitalk = new Gitalk({
+			clientID: '6439928df4e0148ede52',
+			clientSecret: '05309198bf54b50a56b976deba7e9cb59fcdfd64',
+			repo: 'knowledge',
+			owner: 'Ewkoll',
+			admin: ['Ewkoll'],
+			id: decodeURI(location.pathname),
+			distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2020 ideath@operatorworld.com
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

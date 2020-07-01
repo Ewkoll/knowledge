@@ -1,0 +1,654 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ewkoll</title>
+
+  
+  <meta name="author" content="ideath@operatorworld.com">
+  
+
+  
+  <meta name="description" content="knowledge">
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="Ewkoll"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Ewkoll" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Ewkoll</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/atom.xml">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/30/Tesseract识别/"><span>Tesseract识别</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/30/Tesseract识别/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-30T08:09:19.000Z">
+          2020-06-30
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="安装jTessBoxEditor工具"><a href="#安装jTessBoxEditor工具" class="headerlink" title="安装jTessBoxEditor工具"></a>安装jTessBoxEditor工具</h2><ol>
+<li><a href="https://sourceforge.net/projects/vietocr/files/jTessBoxEditor/" target="_blank" rel="noopener">工具下载地址</a>，FX版本需要OracleJDK所以如果下载运行不了，尝试另外一个版本。</li>
+<li>执行train或者train.bat</li>
+</ol>
+<h2 id="准备样本数"><a href="#准备样本数" class="headerlink" title="准备样本数"></a>准备样本数</h2><ol>
+<li>可以使用WebDriver程序，获取对应需要识别网站的数据。</li>
+<li>把png文件转换成tiff文件。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">png2tiff</span><span class="params">(path)</span>:</span></span><br><span class="line">    tiff_path = os.path.join(path, <span class="string">"tiff"</span>)</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">not</span> (os.path.exists(tiff_path))):</span><br><span class="line">        os.mkdir(tiff_path)</span><br><span class="line"></span><br><span class="line">    imgList = os.listdir(path)</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> imgList:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            image_path = os.path.join(path, name)</span><br><span class="line">            <span class="keyword">if</span> os.path.isdir(image_path):</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            images = Image.open(image_path)</span><br><span class="line">            file_name, file_type = os.path.splitext(name)</span><br><span class="line">            <span class="keyword">if</span> file_type == <span class="string">'tiff'</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                file_path = os.path.join(path, <span class="string">"./tiff/%s.tiff"</span> % (file_name))</span><br><span class="line">                images.save(file_path, format=<span class="string">'tiff'</span>)</span><br><span class="line">        <span class="keyword">except</span> IOError <span class="keyword">as</span> e:</span><br><span class="line">            print(e)</span><br><span class="line">            print(<span class="string">"one file was ignored"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">png2tiff(sys.argv[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>执行python png2tiff.py $PATH</li>
+</ol>
+<h2 id="合并样本数据"><a href="#合并样本数据" class="headerlink" title="合并样本数据"></a>合并样本数据</h2><ol>
+<li>使用jTessBoxEditor即可合并图片。 #TODO 这个工具太难用了，自己搞个最好。</li>
+</ol>
+<h2 id="生成Box文件"><a href="#生成Box文件" class="headerlink" title="生成Box文件"></a>生成Box文件</h2><ol>
+<li>tesseract eng.normal.exp0.tif eng.normal.exp0 batch.nochop makebox</li>
+</ol>
+<h2 id="字符位置校正"><a href="#字符位置校正" class="headerlink" title="字符位置校正"></a>字符位置校正</h2><ol>
+<li>这个工具手段校正真TMD难用。</li>
+</ol>
+<h2 id="生成TR文件"><a href="#生成TR文件" class="headerlink" title="生成TR文件"></a>生成TR文件</h2><ol>
+<li>tesseract eng.normal.exp0.tif eng.normal.exp0 nobatch box.train</li>
+</ol>
+<h2 id="增加字体特征文件"><a href="#增加字体特征文件" class="headerlink" title="增加字体特征文件"></a>增加字体特征文件</h2><ol>
+<li>echo font 0 0 0 0 0 &gt; font_properties</li>
+</ol>
+<h2 id="提取字符"><a href="#提取字符" class="headerlink" title="提取字符"></a>提取字符</h2><ol>
+<li>unicharset_extractor eng.normal.exp0.box</li>
+</ol>
+<h2 id="生成shape文件"><a href="#生成shape文件" class="headerlink" title="生成shape文件"></a>生成shape文件</h2><ol>
+<li>shapeclustering -F font_properties -U unicharset eng.normal.exp0.tr</li>
+</ol>
+<h2 id="生成聚集字符特征文件"><a href="#生成聚集字符特征文件" class="headerlink" title="生成聚集字符特征文件"></a>生成聚集字符特征文件</h2><ol>
+<li>mftraining -F font_properties -U unicharset -O unicharset eng.normal.exp0.tr</li>
+</ol>
+<h2 id="合并所有tr文件"><a href="#合并所有tr文件" class="headerlink" title="合并所有tr文件"></a>合并所有tr文件</h2><ol>
+<li>cntraining eng.normal.exp0.tr</li>
+</ol>
+<h2 id="修改文件名"><a href="#修改文件名" class="headerlink" title="修改文件名"></a>修改文件名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mv inttemp eng.normal.inttemp</span><br><span class="line">mv normproto eng.normal.normproto</span><br><span class="line">mv pffmtable eng.normal.pffmtable</span><br><span class="line">mv shapetable eng.normal.shapetable</span><br><span class="line">mv unicharset eng.normal.unicharset</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成训练结果文件"><a href="#生成训练结果文件" class="headerlink" title="生成训练结果文件"></a>生成训练结果文件</h2><ol>
+<li>combine_tessdata eng.normal</li>
+</ol>
+<h2 id="拷贝文件到tessdata目录"><a href="#拷贝文件到tessdata目录" class="headerlink" title="拷贝文件到tessdata目录"></a>拷贝文件到tessdata目录</h2><ol>
+<li>cp eng.normal.traineddata /usr/local/share/tessdata</li>
+</ol>
+<h2 id="测试图像识别"><a href="#测试图像识别" class="headerlink" title="测试图像识别"></a>测试图像识别</h2><ol>
+<li>tesseract captcha1592358516333.png  result -l eng.normal</li>
+</ol>
+<p><em>识别率非常感人的低，入门的使用！</em></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/15/常识/"><span>常识</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/15/常识/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-15T07:06:39.000Z">
+          2020-06-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>英文缩写    英文    中文<br>DEV    development    开发<br>SIT    System Integrate Test    系统整合测试（内测）<br>UAT    User Acceptance Test    用户验收测试<br>PET    Performance Evaluation Test    性能评估测试（压测）<br>SIM    simulation    仿真<br>PRD/PROD    production    产品/正式/生产</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/11/Postgres相关/"><span>Postgres相关</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/11/Postgres相关/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-11T10:12:06.000Z">
+          2020-06-11
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>brew install postgresql  </p>
+<p>初始化数据库</p>
+<p>initdb /usr/local/var/postgres -E utf8</p>
+<p>创建一个数据库用户</p>
+<p>createuser postgres -P</p>
+<p>创建数据库</p>
+<p>createdb dbname -O username -E UTF8 -e </p>
+<p>———一些有用的命令———</p>
+<p>手动启动数据库</p>
+<p>pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start</p>
+<p>远程导出表结构和数据</p>
+<p>pg_dump -h 104.236.131.89 hold -U hold -p 5432 -f hold.dump </p>
+<p>远程导出表结构</p>
+<p>pg_dump -s -h 104.236.131.89 hold -U hold -p 5432 -f hold.dump</p>
+<p>导入本地数据库</p>
+<p>psql -h 0.0.0.0 hold -U hold -p 5432 -f hold.dump  </p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/05/测试指标/"><span>测试指标</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/05/测试指标/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-05T03:14:10.000Z">
+          2020-06-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>QPS每秒查询率(Query Per Second)<br>TPS是Transactions Per Second的缩写，也就是事务数/秒。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/04/删除Mac的DNS缓存/"><span>删除Mac的DNS缓存</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/04/删除Mac的DNS缓存/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-04T10:02:25.000Z">
+          2020-06-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo killall -HUP mDNSResponder</span><br><span class="line">sudo killall mDNSResponderHelper</span><br><span class="line">sudo dscacheutil -flushcache</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/其它/">其它</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/杂项/">杂项</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/04/Vue相关/"><span>Vue相关</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/04/Vue相关/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-04T06:51:43.000Z">
+          2020-06-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="Vue-cli"><a href="#Vue-cli" class="headerlink" title="Vue cli"></a>Vue cli</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">安装</span><br><span class="line">npm install -g @vue&#x2F;cli --force</span><br><span class="line"></span><br><span class="line">创建项目</span><br><span class="line">vue ui 或者 vue create project_name</span><br><span class="line"></span><br><span class="line">全局配置信息</span><br><span class="line">vue config</span><br></pre></td></tr></table></figure>
+
+<p>vue.config.js</p>
+<h3 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 安装prettier</span><br><span class="line">npm install --save-dev prettier</span><br><span class="line">npm install --save-dev eslint-plugin-prettier</span><br></pre></td></tr></table></figure>
+
+<h2 id="Babel"><a href="#Babel" class="headerlink" title="Babel"></a>Babel</h2><p><a href="https://babeljs.io/docs/en/" target="_blank" rel="noopener">Babel</a> 是一个javascript的编译器。<br><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/babel-preset-app" target="_blank" rel="noopener">@vue/babel-preset-app</a></p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>e2e 端到端的黑盒测试。</p>
+<p><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-e2e-nightwatch" target="_blank" rel="noopener"></a></p>
+<h3 id="查看配置"><a href="#查看配置" class="headerlink" title="查看配置"></a>查看配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue inspect &gt; output.js</span><br></pre></td></tr></table></figure>
+
+<h3 id="Http客户端"><a href="#Http客户端" class="headerlink" title="Http客户端"></a>Http客户端</h3><p><a href="https://github.com/axios/axios" target="_blank" rel="noopener">axios</a><br><a href="https://github.com/visionmedia/superagent" target="_blank" rel="noopener">superagent</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Vue基础知识/">Vue基础知识</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Web/">Web</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/02/Mocha测试/"><span>Mocha测试</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/02/Mocha测试/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-02T08:58:03.000Z">
+          2020-06-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>BDD<br>TDD</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/02/Jekyllcn/"><span>Jekyllcn</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/02/Jekyllcn/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-02T03:02:37.000Z">
+          2020-06-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a href="http://jekyllcn.com/" target="_blank" rel="noopener">Jekyllcn</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gem install jekyll bundler</span><br><span class="line"></span><br><span class="line">jekyll new my-awesome-site</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> my-awesome-site</span><br><span class="line"></span><br><span class="line">bundle install</span><br><span class="line"></span><br><span class="line">bundle <span class="built_in">exec</span> jekyll serve</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/02/Ruby/"><span>Ruby</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/02/Ruby/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-02T02:39:19.000Z">
+          2020-06-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a href="https://gems.ruby-china.com/" target="_blank" rel="noopener">源切换</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gem update --system</span><br><span class="line">gem -v</span><br><span class="line"></span><br><span class="line">gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/</span><br><span class="line">gem sources -l</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/02/Caliper区块链性能测试工具/"><span>Caliper区块链性能测试工具</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/02/Caliper区块链性能测试工具/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-02T01:43:32.000Z">
+          2020-06-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="初始化工程"><a href="#初始化工程" class="headerlink" title="初始化工程"></a>初始化工程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 初始化工程</span><br><span class="line">npm init 或者 npm init -y</span><br><span class="line"></span><br><span class="line"># 安装</span><br><span class="line">npm install --only&#x3D;prod @hyperledger&#x2F;caliper-cli@0.3.0</span><br><span class="line"></span><br><span class="line"># 绑定SDK版本</span><br><span class="line">npx caliper bind --caliper-bind-sut fabric:1.4.5</span><br></pre></td></tr></table></figure>
+
+<h2 id="命令提示"><a href="#命令提示" class="headerlink" title="命令提示"></a>命令提示</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npx caliper --version</span><br><span class="line">npx caliper --help</span><br><span class="line">npx caliper bind --help</span><br><span class="line">npx caliper benchmark run --help</span><br></pre></td></tr></table></figure>
+
+<h2 id="Fabric的版本"><a href="#Fabric的版本" class="headerlink" title="Fabric的版本"></a>Fabric的版本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http:&#x2F;&#x2F;bit.ly&#x2F;2ysbOFE | bash -s -- 1.4.7 1.4.7 0.4.20 -ds</span><br><span class="line">curl -sSL http:&#x2F;&#x2F;bit.ly&#x2F;2ysbOFE | bash -s -- 1.4.6 1.4.6 0.4.18 -ds</span><br></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npx caliper launch master \</span><br><span class="line">    --caliper-workspace . \</span><br><span class="line">    --caliper-benchconfig benchmarks&#x2F;scenario&#x2F;simple&#x2F;config.yaml \</span><br><span class="line">    --caliper-networkconfig networks&#x2F;fabric&#x2F;fabric-v1.4.4&#x2F;2org1peercouchdb_raft&#x2F;fabric-go-tls-solo.yaml</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  
+  <a href="/page/2/" class="pagination-next">下一页</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2020 ideath@operatorworld.com
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
