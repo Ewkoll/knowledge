@@ -65,6 +65,377 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/05/14/Context/"><span>Context</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/14/Context/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-14T09:17:53.000Z">
+          2020-05-14
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a href="https://godoc.org/context#WithCancel" target="_blank" rel="noopener"></a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/GO/">GO</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/基础知识/">基础知识</a><a href="/tags/GO/">GO</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/05/13/GO中unsafe包/"><span>GO中unsafe包</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/13/GO中unsafe包/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-13T06:56:55.000Z">
+          2020-05-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最早很久之前的版本使用过unsafe包做string和[]byte的转换，当时感觉就是一些C里面的地址强制转换一样的东西。没怎么深入去看。<br>但是后续了解GO里面还有一些涉及到GC，还有一些内存扩张，转移一系列的东西，使用这个就不能像C++那样随便搞。</p>
+<p>GO缓冲区溢出：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">outofmemory</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a := [<span class="number">4</span>]<span class="keyword">int</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">    fmt.Println(<span class="built_in">cap</span>(a))</span><br><span class="line">    p1 := unsafe.Pointer(&amp;a[<span class="number">1</span>])</span><br><span class="line">    p3 := unsafe.Pointer(<span class="keyword">uintptr</span>(p1) + <span class="number">2</span>*unsafe.Sizeof(a[<span class="number">0</span>]))</span><br><span class="line">    p4 := unsafe.Pointer(<span class="keyword">uintptr</span>(p1) + <span class="number">3</span>*unsafe.Sizeof(a[<span class="number">0</span>]))</span><br><span class="line">    *(*<span class="keyword">int</span>)(p3) = <span class="number">6</span></span><br><span class="line">    *(*<span class="keyword">int</span>)(p4) = <span class="number">10</span></span><br><span class="line">    fmt.Println(<span class="string">"a ="</span>, a) <span class="comment">// a = [0 1 2 6]</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于C的开发者来说，临时变量，如果出现缓冲区溢出问题，这个时候因为越界访问会导致函数的栈帧被覆盖，程序会崩溃，但是在GO中，目前还没有理解GO下层运行机制，以上的代码执行后，居然没有任何的异常。</p>
+<p>p4在修改执行之前</p>
+<img src="/2020/05/13/GO%E4%B8%ADunsafe%E5%8C%85/ce_old_0xc0001a3ea0.png" class="" title="p4地址之前数据">
+
+<p>p4在修改执行之后</p>
+<img src="/2020/05/13/GO%E4%B8%ADunsafe%E5%8C%85/ce_new_0xc0001a3ea0.png" class="" title="p4地址修改后数据">
+
+<p>这个结果是在第一次验证的时候是超越了个人理解。为啥GO这个程序即使这情况，都啥事没有的退出了，突然感觉对GO的知识还是太肤浅了。</p>
+<p>本质还是在内存布局，推测是没有修改到运行函数栈帧对于的内存位置的执行代码，因此才没有出现问题。</p>
+<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>C中函数就是在内存中的地址，只要正确的构建，我们可以通过地址调用某个函数，或者申请一段内存，直接把代码写入到对应内存中执行。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Test</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"Test Func"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">addressCall</span><span class="params">()</span></span> &#123;</span><br><span class="line">    res := fmt.Sprintf(<span class="string">"%p"</span>, Test)</span><br><span class="line">    v, err := strconv.ParseInt(res, <span class="number">0</span>, <span class="number">64</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="literal">nil</span> == err &#123;</span><br><span class="line">        ptr := <span class="keyword">uintptr</span>(<span class="keyword">uint64</span>(v))</span><br><span class="line">        fmt.Printf(<span class="string">"%d\n"</span>, ptr)</span><br><span class="line">        p := unsafe.Pointer(ptr)</span><br><span class="line">        <span class="keyword">type</span> A <span class="function"><span class="keyword">func</span><span class="params">()</span></span></span><br><span class="line">        B := *(*A)(p)</span><br><span class="line">        B() </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/05/13/GO%E4%B8%ADunsafe%E5%8C%85/test_func_0x15b8e10.png" class="" title="内存函数">
+<img src="/2020/05/13/GO%E4%B8%ADunsafe%E5%8C%85/address_call_failed.png" class="" title="调用失败">
+
+<p>此内存的访问修改都是失败的。</p>
+<h3 id="unsafe其它"><a href="#unsafe其它" class="headerlink" title="unsafe其它"></a>unsafe其它</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sameMemoryAddr</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> n <span class="keyword">int64</span> = <span class="number">5</span></span><br><span class="line">    <span class="keyword">var</span> pn = &amp;n</span><br><span class="line">    <span class="keyword">var</span> pf = (*<span class="keyword">float64</span>)(unsafe.Pointer(pn))</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// pn和pf内存地址是相同的。</span></span><br><span class="line">    fmt.Println(*pf) <span class="comment">// 2.5e-323</span></span><br><span class="line">    *pf = <span class="number">3.14159</span></span><br><span class="line">    fmt.Println(n) <span class="comment">// 4614256650576692846</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GCValue</span><span class="params">()</span> *<span class="title">uint64</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value <span class="keyword">byte</span> = <span class="string">'a'</span></span><br><span class="line">    <span class="keyword">var</span> address = (*<span class="keyword">uint64</span>)(unsafe.Pointer(&amp;value))</span><br><span class="line">    *address = <span class="keyword">uint64</span>(<span class="number">9999999999999999999</span>)</span><br><span class="line">    <span class="keyword">return</span> address</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GC</span><span class="params">()</span></span> &#123;</span><br><span class="line">    address := GCValue()</span><br><span class="line">    time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">    <span class="comment">// 如果unsafe.Pointer变量仍然有效，则由unsafe.Pointer变量表示的地址处的数据不会被GC回收。</span></span><br><span class="line">    runtime.GC()</span><br><span class="line">    fmt.Println(*address)</span><br><span class="line">    <span class="comment">// 这里为什么不会内存越界。</span></span><br><span class="line">    <span class="comment">// 底层内存的布局结构，也许在C的理解中是超越了边界了，但是在GO中其实还是在有效的内存范围，因此没有问题。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GC2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> value <span class="keyword">byte</span> = <span class="string">'a'</span> <span class="comment">// 97</span></span><br><span class="line">    fmt.Printf(<span class="string">"%p\n"</span>, &amp;value)</span><br><span class="line">    <span class="keyword">var</span> address = (*<span class="keyword">uint64</span>)(unsafe.Pointer(&amp;value))</span><br><span class="line">    *address = <span class="keyword">uint64</span>(<span class="number">9999999999999999999</span>)</span><br><span class="line">    fmt.Println(*address)</span><br><span class="line">    fmt.Println(value)</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    0xc0001b4a18</span></span><br><span class="line"><span class="comment">    9999999999999999999</span></span><br><span class="line"><span class="comment">    255</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="comment">// 从输出可以看到内存已经被覆盖掉了。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于这些疑惑，应该是要去深入理解GO语言中底层的对象的内存布局结构，在使用unsafe的时候，才能理解对象内存的映射结构关系。</p>
+<h3 id="别人讨论的一些东西"><a href="#别人讨论的一些东西" class="headerlink" title="别人讨论的一些东西"></a>别人讨论的一些东西</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此函数因为是同类型结构转换，因此不会有问题，正常执行。44的结果。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">funA</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a := <span class="string">"654"</span></span><br><span class="line">    c := (*<span class="keyword">string</span>)(unsafe.Pointer(&amp;a)) </span><br><span class="line">    *c = <span class="string">"44"</span></span><br><span class="line">    fmt.Println(*c)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">funB</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a := <span class="number">3</span></span><br><span class="line">    fmt.Printf(<span class="string">"%p %p\n"</span>, &amp;a, unsafe.Pointer(&amp;a))</span><br><span class="line">    <span class="comment">// 这里输出的0xc000126a18 0xc000126a18 表示此地址中存储的内容是3</span></span><br><span class="line"></span><br><span class="line">    c := *(*<span class="keyword">string</span>)(unsafe.Pointer(&amp;a))</span><br><span class="line">    <span class="comment">// 这个地址被赋值到一个string的底层内存结构上。</span></span><br><span class="line">    <span class="comment">// type stringStruct struct &#123;</span></span><br><span class="line">    <span class="comment">//      str unsafe.Pointer</span></span><br><span class="line">    <span class="comment">//      len int</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">    <span class="comment">// 这个时候str的值将会是0x3，len的值是随机值。</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// fmt.Println(c)</span></span><br><span class="line">    <span class="comment">// 如果执行以上代码，这会导致异常崩溃，0x3对应的地址和长度的内存是不可访问的。</span></span><br><span class="line"></span><br><span class="line">    fmt.Printf(<span class="string">"%p\n"</span>, &amp;c)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// c := 是一个赋值操作，因此是新的内存地址。</span></span><br><span class="line">    <span class="comment">// 这里执行不会失败。是c指向了445这个可以访问的内存位置。</span></span><br><span class="line">    c = <span class="string">"445"</span></span><br><span class="line">    fmt.Println(c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>超越认知的问题</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在调试模型下运行fun1函数执行是异常的，编译后执行居然没错。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fun1</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a := <span class="number">2</span></span><br><span class="line">    c := (*<span class="keyword">string</span>)(unsafe.Pointer(&amp;a)) </span><br><span class="line">    *c = <span class="string">"44"</span></span><br><span class="line">    fmt.Println(a)</span><br><span class="line">    fmt.Println(*c) </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// fun1的改造版本，这个版本在调试模式和编译后运行都没有发生异常。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fun2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a := <span class="number">2</span></span><br><span class="line">    v := unsafe.Pointer(&amp;a)</span><br><span class="line">    c := (*<span class="keyword">string</span>)(v) </span><br><span class="line">    *c = <span class="string">"44"</span></span><br><span class="line">    fmt.Println(a)</span><br><span class="line">    fmt.Println(*c)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// fun1的改造版本，这个版本在调试模式和编译后运行都没有发生异常。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fun3</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a := <span class="number">2</span></span><br><span class="line">    c := (*<span class="keyword">string</span>)(unsafe.Pointer(&amp;a))</span><br><span class="line">    fmt.Printf(<span class="string">"%p\n"</span>, &amp;c)</span><br><span class="line">    *c = <span class="string">"44"</span></span><br><span class="line">    fmt.Println(a)</span><br><span class="line">    fmt.Println(*c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<img src="/2020/05/13/GO%E4%B8%ADunsafe%E5%8C%85/func_old_0xc000173ee8.png" class="" title="执行之前">
+<p>在fun1中执行 *c = “44”后，a的值中的23669383=0x1692A87</p>
+<img src="/2020/05/13/GO%E4%B8%ADunsafe%E5%8C%85/func_new_0xc000173ee8.png" class="" title="执行之后">
+<p>本质上这个<em>c的内存结构，应该是等于字符串”44”的内存信息的。<br>执行fmt.Println(</em>c)会异常，在调试模型下。</p>
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><p><a href="https://godoc.org/unsafe" target="_blank" rel="noopener">unsafe文档</a><br><a href="https://cloud.tencent.com/developer/article/1192566" target="_blank" rel="noopener">unsafe其它</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/GO/">GO</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/基础知识/">基础知识</a><a href="/tags/GO/">GO</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/05/13/GO计算对象内存占用/"><span>GO计算对象内存占用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/13/GO计算对象内存占用/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-13T03:37:40.000Z">
+          2020-05-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>对于固定大小的对象可以使用<code>encoding/binary</code>包进行计算。</p>
+<p>A fixed-size value is either a fixed-size arithmetic type (bool, int8, uint8, int16, float32, complex64, …) or an array or struct containing only fixed-size values.</p>
+<p>在使用binary.Size(int)这样的值返回值是-1。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Size</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> a <span class="keyword">int32</span></span><br><span class="line">    a = <span class="number">10</span></span><br><span class="line">    fmt.Println(<span class="string">"Real size of a:"</span>, binary.Size(a))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> b <span class="keyword">string</span></span><br><span class="line">    b = <span class="string">"abc"</span></span><br><span class="line">    fmt.Println(<span class="string">"Real size of b:"</span>, binary.Size(b))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> c <span class="keyword">int</span></span><br><span class="line">    c = <span class="number">10</span></span><br><span class="line">    fmt.Println(<span class="string">"Real size of c:"</span>, binary.Size(c))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Real size of a: 4</span></span><br><span class="line"><span class="comment">    Real size of b: -1</span></span><br><span class="line"><span class="comment">    Real size of c: -1</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="字节序"><a href="#字节序" class="headerlink" title="字节序"></a>字节序</h3><p><strong><em>字节序</em></strong> 就是多字节数据类型在内存中的存储顺序。可分为大端序，低地址端存放高位字节；小端序与之相反，低地址端存放低位字节。</p>
+<p>数字305424265=0x12346789</p>
+<p>小端模式<br>[0]:    137     : 0x89      ——–  低地址<br>[1]:    103     : 0x67<br>[2]:    52      : 0x34<br>[3]:    18      : 0x12<br>[5]:    0       : 0x00<br>[6]:    0       : 0x00<br>[7]:    0       : 0x00<br>[8]:    0       : 0x00      ——–  高地址</p>
+<p>大端模式<br>[0]:    0       : 0x00      ——–  低地址<br>[1]:    0       : 0x00<br>[2]:    0       : 0x00<br>[3]:    0       : 0x00<br>[5]:    18      : 0x12<br>[6]:    52      : 0x34<br>[7]:    103     : 0x67<br>[8]:    137     : 0x89      ——–  高地址</p>
+<p>小端模式，编译时候，如果需要从int32-&gt;int64只需要增加内存范围，不需要做移动操作。<br>大端模式，主要是用于网络数据包传输，可以直接按顺序读取数据。</p>
+<h3 id="encoding-binary字节编码。"><a href="#encoding-binary字节编码。" class="headerlink" title="encoding/binary字节编码。"></a><code>encoding/binary</code>字节编码。</h3><p>binary编码大小端数据。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">LittleEndian</span><span class="params">()</span></span> &#123;</span><br><span class="line">    buf := []<span class="keyword">byte</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">    </span><br><span class="line">    d := unsafe.Pointer(&amp;buf)</span><br><span class="line">    c := *(*<span class="keyword">uint64</span>)(d)</span><br><span class="line">    v := unsafe.Pointer(<span class="keyword">uintptr</span>(c))</span><br><span class="line"></span><br><span class="line">    binary.LittleEndian.PutUint64(buf, <span class="number">305424265</span>)</span><br><span class="line">    realvalue := *(*<span class="keyword">uint64</span>)(v)</span><br><span class="line">    fmt.Println(realvalue)</span><br><span class="line">    </span><br><span class="line">    x := binary.LittleEndian.Uint64(buf)</span><br><span class="line">    fmt.Println(x)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/05/13/GO%E8%AE%A1%E7%AE%97%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/0xc000028ac8.png" class="" title="数据读取">
+
+<h3 id="encoding-binary编码"><a href="#encoding-binary编码" class="headerlink" title="encoding/binary编码"></a><code>encoding/binary</code>编码</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Read</span><span class="params">()</span></span> &#123;</span><br><span class="line">    buf := <span class="built_in">new</span>(bytes.Buffer)</span><br><span class="line">    pi := math.Pi</span><br><span class="line">    err := binary.Write(buf, binary.LittleEndian, pi)</span><br><span class="line">    <span class="keyword">if</span> <span class="literal">nil</span> == err &#123;</span><br><span class="line">        fmt.Printf(<span class="string">"% x\n"</span>, buf.Bytes()) <span class="comment">// 18 2d 44 54 fb 21 09 40</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    pi = <span class="number">0</span></span><br><span class="line">    piReader := bytes.NewReader(buf.Bytes())</span><br><span class="line">    binary.Read(piReader, binary.LittleEndian, &amp;pi)</span><br><span class="line">    fmt.Printf(<span class="string">"pi %g %T %d\n"</span>, pi, pi, unsafe.Sizeof(pi)) <span class="comment">// pi 3.141592653589793</span></span><br><span class="line">    fmt.Printf(<span class="string">"pi %.64b "</span>, math.Float64bits(pi))</span><br><span class="line">    <span class="comment">// pi 0 | 1000 0000 | 000 1001 0010 0001  1111 1011 0101 0100 0100 0100 0010 1101 0001 1000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="encoding-binary可变长编码"><a href="#encoding-binary可变长编码" class="headerlink" title="encoding/binary可变长编码"></a><code>encoding/binary</code>可变长编码</h3><p>binary包中PutVarint使用的是可变长编码的方式来处理数据。</p>
+<p>通常一个字节8位存储数据最大就是8个1=0xFF=255，变长编码使用第一位标识是否需要读取下个字节的内容。</p>
+<p>比如</p>
+<p>88 = 0x58 小于 127 直接存储在一个字节即可，因为不需要读取后面的字节内容。存储个常规的数字一样的。</p>
+<p>234 = 0xEA </p>
+<p>1110 1010 大于了127就需要2个字节来存储对应的数据。</p>
+<p>10000001 –&gt; 表示需要读取下个字节。</p>
+<p>01101010 –&gt; 上个最后一个1和7位合起来。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">PutVarint</span><span class="params">()</span></span> &#123;</span><br><span class="line">    buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, binary.MaxVarintLen64)</span><br><span class="line">    <span class="keyword">for</span> _, x := <span class="keyword">range</span> []<span class="keyword">int64</span>&#123;<span class="number">-65</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">127</span>, <span class="number">128</span>, <span class="number">255</span>, <span class="number">256</span>, <span class="number">88</span>, <span class="number">32323</span>&#125; &#123;</span><br><span class="line">        n := binary.PutVarint(buf, x)</span><br><span class="line">        fmt.Print(<span class="string">"Value: "</span>, x, <span class="string">" Length: "</span>, n, <span class="string">" 0x"</span>)</span><br><span class="line">        fmt.Printf(<span class="string">"%x\n"</span>, buf[:n])</span><br><span class="line">        v, size := binary.Varint(buf)</span><br><span class="line">        <span class="keyword">if</span> v != x &#123;</span><br><span class="line">            fmt.Println(<span class="string">"Value: "</span>, v, <span class="string">" Lenght: "</span>, size, <span class="string">'\n'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    inputs := [][]<span class="keyword">byte</span>&#123;</span><br><span class="line">        &#123;<span class="number">0x01</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0x02</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0x7f</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0x80</span>, <span class="number">0x01</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0xff</span>, <span class="number">0x01</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0x80</span>, <span class="number">0x02</span>&#125;,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> _, b := <span class="keyword">range</span> inputs &#123;</span><br><span class="line">        x, n := binary.Uvarint(b)</span><br><span class="line">        <span class="keyword">if</span> n != <span class="built_in">len</span>(b) &#123;</span><br><span class="line">            fmt.Println(<span class="string">"Uvarint did not consume all of in"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        fmt.Println(x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Value: -65 Length: 2 0x8101</span></span><br><span class="line"><span class="comment">    Value: 1 Length: 1 0x02</span></span><br><span class="line"><span class="comment">    Value: 2 Length: 1 0x04</span></span><br><span class="line"><span class="comment">    Value: 127 Length: 2 0xfe01</span></span><br><span class="line"><span class="comment">    Value: 128 Length: 2 0x8002</span></span><br><span class="line"><span class="comment">    Value: 255 Length: 2 0xfe03</span></span><br><span class="line"><span class="comment">    Value: 256 Length: 2 0x8004</span></span><br><span class="line"><span class="comment">    Value: 88 Length: 2 0xb001</span></span><br><span class="line"><span class="comment">    Value: 32323 Length: 3 0x86f903</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    1</span></span><br><span class="line"><span class="comment">    2</span></span><br><span class="line"><span class="comment">    127</span></span><br><span class="line"><span class="comment">    128</span></span><br><span class="line"><span class="comment">    255</span></span><br><span class="line"><span class="comment">    256</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="内存占用计算"><a href="#内存占用计算" class="headerlink" title="内存占用计算"></a>内存占用计算</h3><p>先说明下计算slice的内存占用大小。我们slice的定义如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> slice <span class="keyword">struct</span> &#123;</span><br><span class="line">    array unsafe.Pointer</span><br><span class="line">    <span class="built_in">len</span>   <span class="keyword">int</span></span><br><span class="line">    <span class="built_in">cap</span>   <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过结构我们可以知道切片的是由一个指针和2个int来表示的，因此计算切片的大小，等于切片结构的大小和指向的内存空间的总和。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">calcSize</span><span class="params">()</span></span> &#123;</span><br><span class="line">    s := <span class="built_in">make</span>([]<span class="keyword">int32</span>, <span class="number">1000</span>)</span><br><span class="line">    fmt.Println(<span class="string">"Size of []int32:"</span>, unsafe.Sizeof(s))</span><br><span class="line">    fmt.Println(<span class="string">"Size of [1000]int32:"</span>, unsafe.Sizeof([<span class="number">1000</span>]<span class="keyword">int32</span>&#123;&#125;))</span><br><span class="line">    fmt.Println(<span class="string">"Real size of s:"</span>, unsafe.Sizeof(s)+unsafe.Sizeof([<span class="number">1000</span>]<span class="keyword">int32</span>&#123;&#125;))</span><br><span class="line">    fmt.Println(<span class="string">"Real size of s:"</span>, binary.Size(s))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Size of []int32: 24</span></span><br><span class="line"><span class="comment">    Size of [1000]int32: 4000</span></span><br><span class="line"><span class="comment">    Real size of s: 4024</span></span><br><span class="line"><span class="comment">    Real size of s: 4000</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>string的底层结构定义:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> stringStruct <span class="keyword">struct</span> &#123;</span><br><span class="line">    str unsafe.Pointer</span><br><span class="line">    <span class="built_in">len</span> <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>map的结构定义:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A header for a Go map.</span></span><br><span class="line"><span class="keyword">type</span> hmap <span class="keyword">struct</span> &#123;</span><br><span class="line">        <span class="comment">// Note: the format of the hmap is also encoded in cmd/compile/internal/gc/reflect.go.</span></span><br><span class="line">        <span class="comment">// Make sure this stays in sync with the compiler's definition.</span></span><br><span class="line">        count     <span class="keyword">int</span> <span class="comment">// # live cells == size of map.  Must be first (used by len() builtin)</span></span><br><span class="line">        flags     <span class="keyword">uint8</span></span><br><span class="line">        B         <span class="keyword">uint8</span>  <span class="comment">// log_2 of # of buckets (can hold up to loadFactor * 2^B items)</span></span><br><span class="line">        noverflow <span class="keyword">uint16</span> <span class="comment">// approximate number of overflow buckets; see incrnoverflow for details</span></span><br><span class="line">        hash0     <span class="keyword">uint32</span> <span class="comment">// hash seed</span></span><br><span class="line"></span><br><span class="line">        buckets    unsafe.Pointer <span class="comment">// array of 2^B Buckets. may be nil if count==0.</span></span><br><span class="line">        oldbuckets unsafe.Pointer <span class="comment">// previous bucket array of half the size, non-nil only when growing</span></span><br><span class="line">        nevacuate  <span class="keyword">uintptr</span>        <span class="comment">// progress counter for evacuation (buckets less than this have been evacuated)</span></span><br><span class="line"></span><br><span class="line">        extra *mapextra <span class="comment">// optional fields</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// mapextra holds fields that are not present on all maps.</span></span><br><span class="line"><span class="keyword">type</span> mapextra <span class="keyword">struct</span> &#123;</span><br><span class="line">        <span class="comment">// If both key and elem do not contain pointers and are inline, then we mark bucket</span></span><br><span class="line">        <span class="comment">// type as containing no pointers. This avoids scanning such maps.</span></span><br><span class="line">        <span class="comment">// However, bmap.overflow is a pointer. In order to keep overflow buckets</span></span><br><span class="line">        <span class="comment">// alive, we store pointers to all overflow buckets in hmap.extra.overflow and hmap.extra.oldoverflow.</span></span><br><span class="line">        <span class="comment">// overflow and oldoverflow are only used if key and elem do not contain pointers.</span></span><br><span class="line">        <span class="comment">// overflow contains overflow buckets for hmap.buckets.</span></span><br><span class="line">        <span class="comment">// oldoverflow contains overflow buckets for hmap.oldbuckets.</span></span><br><span class="line">        <span class="comment">// The indirection allows to store a pointer to the slice in hiter.</span></span><br><span class="line">        overflow    *[]*bmap</span><br><span class="line">        oldoverflow *[]*bmap</span><br><span class="line"></span><br><span class="line">        <span class="comment">// nextOverflow holds a pointer to a free overflow bucket.</span></span><br><span class="line">        nextOverflow *bmap</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">unsafe.Sizeof(hmap) + (<span class="built_in">len</span>(theMap) * <span class="number">8</span>) + (<span class="built_in">len</span>(theMap) * <span class="number">8</span> * unsafe.Sizeof(x)) + (<span class="built_in">len</span>(theMap) * <span class="number">8</span> * unsafe.Sizeof(y))</span><br></pre></td></tr></table></figure>
+
+<p>使用检查性能和内存对应的工具来做分析，效果会好的多。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/GO/">GO</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/基础知识/">基础知识</a><a href="/tags/GO/">GO</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/05/13/GO中通道/"><span>GO中通道</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/13/GO中通道/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-13T03:20:08.000Z">
+          2020-05-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/05/13/GO中struct/"><span>GO中struct{}</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/13/GO中struct/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-13T02:20:52.000Z">
+          2020-05-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>通常在使用GO的过程中，会定义一些只有方法没有成员的结构体。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> PayLoad <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *PayLoad)</span> <span class="title">GetPalyLoad</span><span class="params">()</span> []<span class="title">byte</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> []<span class="keyword">byte</span>(<span class="string">"hello world"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    PayLoad := &amp;PayLoad&#123;&#125;</span><br><span class="line">    fmt.Println(<span class="keyword">string</span>(PayLoad.GetPalyLoad()))</span><br><span class="line">    fmt.Printf(<span class="string">"%d\n"</span>, unsafe.Sizeof(PayLoad))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> PayLoadZero Payload</span><br><span class="line">    fmt.Println(<span class="keyword">string</span>(PayLoadZero.GetPalyLoad()))</span><br><span class="line">    fmt.Printf(<span class="string">"%d\n"</span>, unsafe.Sizeof(PayLoadZero))</span><br><span class="line"></span><br><span class="line">    a := <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">    b := <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">    fmt.Printf(<span class="string">"%p %p %p\n"</span>, &amp;a, &amp;b, &amp;PayLoadZero)</span><br><span class="line">    fmt.Println(<span class="string">"a size:"</span>, unsafe.Sizeof(a))</span><br><span class="line">    fmt.Println(<span class="string">"b size:"</span>, unsafe.Sizeof(b))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> c <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">var</span> d <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">    fmt.Printf(<span class="string">"%p %p %p\n"</span>, &amp;c, &amp;d, &amp;PayLoadZero)</span><br><span class="line">    fmt.Println(<span class="string">"c size:"</span>, unsafe.Sizeof(c))</span><br><span class="line">    fmt.Println(<span class="string">"d size:"</span>, unsafe.Sizeof(d))</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        hello world</span></span><br><span class="line"><span class="comment">        8 								// 输出结果是8，因为这里计算的是指针的大小。</span></span><br><span class="line"><span class="comment">        hello world</span></span><br><span class="line"><span class="comment">        0								// 输出结果是0，PayLoadZero对应是struct&#123;&#125;存储内存。</span></span><br><span class="line"><span class="comment">        0x1a8e218 0x1a8e218 0x1a8e218</span></span><br><span class="line"><span class="comment">        a size: 0</span></span><br><span class="line"><span class="comment">        b size: 0</span></span><br><span class="line"><span class="comment">        0x1a8e218 0x1a8e218 0x1a8e218</span></span><br><span class="line"><span class="comment">        c size: 0</span></span><br><span class="line"><span class="comment">        d size: 0</span></span><br><span class="line"><span class="comment">        c size: 0</span></span><br><span class="line"><span class="comment">        d size: 0</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="comment">// 可以发现struct&#123;&#125; 和 strcut&#123;&#125;&#123;&#125; 以及type定义的结构体的地址都是相同的。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>另外struct{}的一个用途就是通过<code>map[string]struct{}</code>定义set集合的功能。<br>这种形式,值不再占用内存。并且仅有两种状态，有或无<br>如果定义的是<code>map[string]bool</code>，存在有true、false或没有三种状态。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> IntSet <span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    IntSet := <span class="built_in">make</span>(IntSet)</span><br><span class="line">    IntSet[<span class="number">1</span>] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">    IntSet[<span class="number">2</span>] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line"></span><br><span class="line">    v, ok := IntSet[<span class="number">1</span>]</span><br><span class="line">    fmt.Println(v, ok)</span><br><span class="line">    v, ok = IntSet[<span class="number">3</span>]</span><br><span class="line">    fmt.Println(v, ok)</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        &#123;&#125; true</span></span><br><span class="line"><span class="comment">        &#123;&#125; false</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    </span><br><span class="line">    boolSet := <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">bool</span>&#123;</span><br><span class="line">        <span class="string">"a"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"b"</span>: <span class="literal">false</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    v1, ok := boolSet[<span class="string">"a"</span>]</span><br><span class="line">    fmt.Println(v1, ok)</span><br><span class="line">    v1, ok = boolSet[<span class="string">"b"</span>]</span><br><span class="line">    fmt.Println(v1, ok)</span><br><span class="line">    v1, ok = boolSet[<span class="string">"c"</span>]</span><br><span class="line">    fmt.Println(v1, ok)</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        true true</span></span><br><span class="line"><span class="comment">        false true</span></span><br><span class="line"><span class="comment">        false false</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>通道中使用<code>struct{}</code>类型，用于发送信号，这个的优点是可以不占用内存。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    waitSig := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        time.Sleep(time.Duration(<span class="number">1</span> * time.Second)) </span><br><span class="line">        fmt.Println(<span class="string">"Sleep Over"</span>)</span><br><span class="line">        waitSig &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">        fmt.Println(<span class="string">"Sig Notify"</span>)</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    fmt.Println(&lt;-waitSig)</span><br><span class="line">    </span><br><span class="line">    waitChan := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>, <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        time.Sleep(<span class="number">4</span> * time.Second)</span><br><span class="line">        waitChan &lt;- <span class="string">"notify"</span></span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">select</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> out := &lt;-waitChan:</span><br><span class="line">        fmt.Println(out)</span><br><span class="line">    <span class="keyword">case</span> &lt;-time.After(<span class="number">3</span> * time.Second):</span><br><span class="line">        fmt.Println(<span class="string">"timeout!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其它相关知识：<br>    <a href="/2020/05/13/GO%E4%B8%AD%E9%80%9A%E9%81%93/" title="GO中通道">GO中通道</a><br>    <a href="/2020/05/13/GO%E8%AE%A1%E7%AE%97%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/" title="GO计算对象内存占用">GO计算对象内存占用</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/GO/">GO</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/基础知识/">基础知识</a><a href="/tags/GO/">GO</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/05/12/GoWiki/"><span>GoWiki</span></a></h3>
     
   
