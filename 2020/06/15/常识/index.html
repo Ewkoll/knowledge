@@ -126,7 +126,13 @@
 <td>产品/正式/生产</td>
 </tr>
 </tbody></table>
-
+<h2 id="瑞数"><a href="#瑞数" class="headerlink" title="瑞数"></a>瑞数</h2><ol>
+<li>第一次请求，在Nginx检测Cooike，如果没有Cooike，随机返回一块</li>
+</ol>
+<h2 id="Ubuntu安装Mysql"><a href="#Ubuntu安装Mysql" class="headerlink" title="Ubuntu安装Mysql"></a>Ubuntu安装Mysql</h2><p>1、sudo apt install mysql-server<br>2、mysql_secure_installation<br>3、密码 Qa123456.0<br>4、mysql -u root -p<br>5、ALTER USER ‘root’@’%’ IDENTIFIED WITH mysql_native_password BY ‘Qa123456.0’;<br>6、SELECT user, authentication_string, plugin, host FROM mysql.user;<br>7、select user,host from mysql.user;<br>8、systemctl restart mysql<br>9、grant select,insert,update,delete,create,drop privileges on database.* to user@localhost<br>10、grant all privileges on chain_storage.* to chain_mysql_accout;<br>11、CREATE SCHEMA <code>chain_storage</code> DEFAULT CHARACTER SET utf8mb4 ;</p>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>1、sudo apt-get install build-essential<br>2、sudo apt-get install make<br>3、#include &lt;jemalloc/jemalloc.h&gt;<br>4、sudo apt-get install autoconf<br>5、wget <a href="https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2" target="_blank" rel="noopener">https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2</a><br>6、./autogen.sh –with-jemalloc-prefix=je_<br>7、make install<br>8、./deps/hiredis/libhiredis.a: No such file or directory<br>9、You need tcl 8.5 or newer in order to run the Redis test<br>10、sudo apt-get install tcl<br>11、make lua hiredis linenoise</p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p><a href="https://docs.ksyun.com/documents/1052" target="_blank" rel="noopener">https://docs.ksyun.com/documents/1052</a><br><a href="https://docs.docker.com/engine/install/ubuntu/" target="_blank" rel="noopener">https://docs.docker.com/engine/install/ubuntu/</a></p>
+<h2 id="修改docker镜像源为国内源"><a href="#修改docker镜像源为国内源" class="headerlink" title="修改docker镜像源为国内源"></a>修改docker镜像源为国内源</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"registry-mirrors"</span>: [<span class="string">"http://hub-mirror.c.163.com"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload // 重启守护进程</span><br><span class="line"></span><br><span class="line">systemctl restart docker.service</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -193,7 +199,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2020 ideath@operatorworld.com
+    &copy; 2021 ideath@operatorworld.com
     
   </p>
 </footer>

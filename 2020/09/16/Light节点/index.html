@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Light节点 | Ewkoll</title>
+
+  
+  <meta name="author" content="ideath@operatorworld.com">
+  
+
+  
+  <meta name="description" content="knowledge">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Light节点"/>
+
+  <meta property="og:site_name" content="Ewkoll"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Ewkoll" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Ewkoll</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/atom.xml">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Light节点</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/09/16/Light节点/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-09-16T01:43:02.000Z">
+          2020-09-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <ol>
+<li>以太坊提供了 “fast”, “full”, “light” 三种数据同步模式</li>
+<li>原来还有 –fast,–light 两个命令行选项，现在已经被 –syncmode 取代</li>
+</ol>
+<p>当指定同步模式为 “fast” 时，以太坊节点会从网络同步所有的区块头，区块体以及状态数据，但不对区块中的交易进行重放，只会对区块中的数据进行校验。<br>当指定同步模式为”full”时，以太坊节点会从网络同步所有的区块头，区块体并重放区块中的交易以生成状态数据。<br>当指定同步模式为“light”时，以太坊节点仅从网络中同步所有区块头，不去同步区块体，也不去同步状态数据，仅在需要相应区块和状态数据时从网络上获取。</p>
+<p>当不指定任何模式时，默认为 “fast” 模式。</p>
+<h2 id="为啥要提供三种模式"><a href="#为啥要提供三种模式" class="headerlink" title="为啥要提供三种模式"></a>为啥要提供三种模式</h2><ol>
+<li>随着以太坊区块数据的越来越多，全节点同步，也就是“full”这种数据同步模式实在是太慢了，往往需要一周甚至更多时间。但以太坊网络又需要这些全节点去保存可追溯的历史数</li>
+<li>运行轻节点，也就是“light”这种数据同步模式，因为只需要同步区块头数据，数据同步在几个小时就可以完成，但很多操作都需要这些轻节点去网络上其它全节点去请求数据，显然仅仅靠轻节点去组成区块链网络是不现实的。</li>
+<li>“fast” 这种同步模式就是“full”模式和“light”模式的一个折衷，通过直接从网络同步状态数据而不是通过重放交易生成状态数据的方式，节省了很多时间，一般来说机器配置合理的话 2～3 天就可以完成主网数据同步。</li>
+</ol>
+<h2 id="三种模式的安全性"><a href="#三种模式的安全性" class="headerlink" title="三种模式的安全性"></a>三种模式的安全性</h2><p>毋庸置疑，全节点模式是最安全的，在这种模式下，所有区块和区块中的交易都会被逐一验证。<br>在 “fast” 这种数据同步模式下，比较靠近现在的区块和其中包含的交易也都会被逐一验证。但不会验证比较老的区块数据。<br>在 ”light“ 这种轻节点模式下，不会对区块和区块中的交易进行交易。但在需要处理特定区块相关交易或需要读取某个区块中相关的状态数据时，会通过区块头中的哈希值对区块和状态数据进行校验。</p>
+<h2 id="该用什么模式"><a href="#该用什么模式" class="headerlink" title="该用什么模式"></a>该用什么模式</h2><p>自己搭节点，没有特别需求的话，使用默认的 ”fast“ 同步模式就好了。<br>如果要在树莓派等低配置设备中，可以使用 ”light“ 同步模式。使用”light“模式时，本地签名并发送交易一般没什么问题，但要获取区块数据或账户余额时，对网络情况就有更多的要求了。<br>如果特别注重安全性，并且想获取所有区块链历史数据，只能使用全节点模式了。</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>问题： light 节点与 full 节点是如何交互的？<br>解答： 首先，light 节点会维护多个与 full 节点的 p2p 连接。然后，当 light 节点需要与 full 节点交互时，会将需要发送的请求放到一个请求队列中。light 节点会启动一个 goroutine 不断从请求队列里获取请求，然后从 p2p 节点列表里选一个当前最好用的节点，将请求发出去。请求得到的结果会发到本地数据库和缓存里。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了自己搭节点时需要注意的几种数据同步模式。其实很多 DApp，包括一些去中心化钱包，自己是不搭节点，而是依赖于第三方节点比如 Infura 的。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comment" class="comment">
+		<div id="gitalk-container"></div>
+	</section>
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var gitalk = new Gitalk({
+			clientID: '6439928df4e0148ede52',
+			clientSecret: '05309198bf54b50a56b976deba7e9cb59fcdfd64',
+			repo: 'knowledge',
+			owner: 'Ewkoll',
+			admin: ['Ewkoll'],
+			id: decodeURI(location.pathname),
+			distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 ideath@operatorworld.com
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

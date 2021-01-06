@@ -65,6 +65,275 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/06/01/Gulp/"><span>Gulp</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/01/Gulp/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-01T03:12:14.000Z">
+          2020-06-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a href="https://www.gulpjs.com.cn/" target="_blank" rel="noopener">Gulp</a></p>
+<p><a href="https://www.gulpjs.com.cn/docs/getting-started/quick-start/" target="_blank" rel="noopener">安装</a></p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><h2 id="Scss"><a href="#Scss" class="headerlink" title="Scss"></a>Scss</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install node-sass gulp-sass --save-dev</span><br></pre></td></tr></table></figure>
+
+<h2 id="缩小css"><a href="#缩小css" class="headerlink" title="缩小css"></a>缩小css</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp-clean-css --save-dev</span><br></pre></td></tr></table></figure>
+
+<h2 id="源码映射"><a href="#源码映射" class="headerlink" title="源码映射"></a>源码映射</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp-sourcemaps --save-dev</span><br><span class="line">npm install fibers</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/01/Mermaid/"><span>Mermaid</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/01/Mermaid/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-01T02:06:17.000Z">
+          2020-06-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a href="https://mermaid-js.github.io/mermaid/#/flowchart" target="_blank" rel="noopener">Mermaid</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/05/27/Java相关/"><span>Java相关</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/27/Java相关/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-27T02:30:20.000Z">
+          2020-05-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">brew search maven</span><br><span class="line">brew info maven</span><br><span class="line">brew install maven</span><br><span class="line">brew remove maven</span><br><span class="line">brew cleanup</span><br><span class="line">brew list          列出已安装的软件</span><br><span class="line">brew update        更新brew</span><br><span class="line">brew home          用浏览器打开brew的官方网站</span><br><span class="line">brew info          显示软件信息</span><br><span class="line">brew deps          显示包依赖</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改Maven国内源</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">brew 安装目录下查找maven的conf目录中settings.xml文件修改。</span><br><span class="line"></span><br><span class="line">&lt;mirrors&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">        &lt;id&gt;alimaven&lt;&#x2F;id&gt;</span><br><span class="line">        &lt;name&gt;aliyun maven&lt;&#x2F;name&gt;</span><br><span class="line">        &lt;url&gt;http:&#x2F;&#x2F;maven.aliyun.com&#x2F;nexus&#x2F;content&#x2F;groups&#x2F;public&#x2F;&lt;&#x2F;url&gt;</span><br><span class="line">        &lt;mirrorOf&gt;central&lt;&#x2F;mirrorOf&gt;</span><br><span class="line">    &lt;&#x2F;mirror&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">        &lt;id&gt;alimaven&lt;&#x2F;id&gt;</span><br><span class="line">        &lt;mirrorOf&gt;central&lt;&#x2F;mirrorOf&gt;</span><br><span class="line">        &lt;name&gt;aliyun maven&lt;&#x2F;name&gt;</span><br><span class="line">        &lt;url&gt;http:&#x2F;&#x2F;maven.aliyun.com&#x2F;nexus&#x2F;content&#x2F;repositories&#x2F;central&#x2F;&lt;&#x2F;url&gt;</span><br><span class="line">    &lt;&#x2F;mirror&gt;</span><br><span class="line">&lt;&#x2F;mirrors&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><h3 id="Value"><a href="#Value" class="headerlink" title="@Value"></a>@Value</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从配置文件中读取。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;PeerLocation&#125;"</span>)</span><br><span class="line"><span class="keyword">public</span> String PeerLocation;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户名</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"张三"</span>)</span><br><span class="line"><span class="keyword">private</span> String UserName;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 年龄</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"26"</span>)</span><br><span class="line"><span class="keyword">private</span> Integer Age;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 从组件注入变量，这个必须是个公开的变量。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"#&#123;beanValue.AnotherValue&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String BeanValue;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanValue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"AnotherValue"</span>)</span><br><span class="line">    <span class="keyword">public</span> String AnotherValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态调用指令"><a href="#动态调用指令" class="headerlink" title="动态调用指令"></a>动态调用指令</h2><p>对应于class文件中CONSTANT_InvokeDynamic的指令。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicInvoke</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Runnable r = () -&gt; System.out.println(Arrays.toString(args));</span><br><span class="line">        r.run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">javac DynamicInvoke.java 生成<span class="class"><span class="keyword">class</span>文件。</span></span><br><span class="line"><span class="class"><span class="title">javap</span> -<span class="title">v</span> -<span class="title">p</span> <span class="title">DynamicInvoke</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line">public static void main(java.lang.String[]);</span><br><span class="line">    descriptor: ([Ljava/lang/String;)V</span><br><span class="line">    flags: (<span class="number">0x0009</span>) ACC_PUBLIC, ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">        stack=<span class="number">1</span>, locals=<span class="number">2</span>, args_size=<span class="number">1</span></span><br><span class="line">            <span class="number">0</span>: aload_0</span><br><span class="line">            1: invokedynamic #2,  0              // InvokeDynamic #0:run:([Ljava/lang/String;)Ljava/lang/Runnable;</span><br><span class="line">            <span class="number">6</span>: astore_1</span><br><span class="line">            <span class="number">7</span>: aload_1</span><br><span class="line">            8: invokeinterface #3,  1            // InterfaceMethod java/lang/Runnable.run:()V</span><br><span class="line">        <span class="number">13</span>: <span class="keyword">return</span></span><br><span class="line">        LineNumberTable:</span><br><span class="line">        line <span class="number">7</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">8</span>: <span class="number">7</span></span><br><span class="line">        line <span class="number">9</span>: <span class="number">13</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到mian函数中存在对应的动态调用函数。</p>
+<h2 id="Jpa-双向关联"><a href="#Jpa-双向关联" class="headerlink" title="Jpa 双向关联"></a>Jpa 双向关联</h2><p>1、双向关联后会到导致Json序列化堆栈溢出.<br>解决方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JsonIgnore</span> 同时也能解决Jpa Lay Init 序列化异常问题.</span><br></pre></td></tr></table></figure>
+
+<p>2、解决查看对象的时候,因相互引用导致堆栈溢出问题.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">通过lombok排除某些对象的Hash计算和Tostring方法.</span><br><span class="line"><span class="meta">@ToString</span>(exclude = &#123;<span class="string">"userLevelInfo"</span>, <span class="string">"roleInfo"</span>, <span class="string">"userACLList"</span>, <span class="string">"userPaymentList"</span>&#125;)</span><br><span class="line"><span class="meta">@EqualsAndHashCode</span>(callSuper = <span class="keyword">true</span>, exclude = &#123;<span class="string">"userLevelInfo"</span>, <span class="string">"roleInfo"</span>, <span class="string">"userACLList"</span>, <span class="string">"userPaymentList"</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>3、在关联中设定fetchType和fetchMode解决数据加载时机和方式.</p>
+<p><a href="https://www.baeldung.com/hibernate-lazy-loading-workaround" target="_blank" rel="noopener">参考链接</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Java/">Java</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Java/">Java</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/05/26/SQL注入/"><span>SQL注入</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/26/SQL注入/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-26T07:42:25.000Z">
+          2020-05-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/05/26/XSS原理/"><span>XSS原理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/26/XSS原理/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-26T07:42:16.000Z">
+          2020-05-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/05/26/浏览器同源策略以及跨域/"><span>浏览器同源策略以及跨域</span></a></h3>
     
   
@@ -595,270 +864,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/20/CA证书相关/"><span>CA证书相关</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/20/CA证书相关/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-20T03:33:45.000Z">
-          2020-05-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/基础知识/">基础知识</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/基础知识/">基础知识</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/20/Openssl相关/"><span>Openssl相关</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/20/Openssl相关/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-20T02:13:14.000Z">
-          2020-05-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/20/Https协议/"><span>https协议</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/20/Https协议/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-20T01:21:05.000Z">
-          2020-05-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/20/SSH协议/"><span>ssh协议</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/20/SSH协议/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-20T01:20:56.000Z">
-          2020-05-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/20/证书相关/"><span>证书相关</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/20/证书相关/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-20T01:15:31.000Z">
-          2020-05-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h3 id="KEY"><a href="#KEY" class="headerlink" title="KEY"></a>KEY</h3><p>私钥</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">生成</span><br><span class="line">openssl genrsa -out server.key 2048</span><br><span class="line"></span><br><span class="line">格式</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">Base64</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
-
-<h3 id="CSR-证书请求文件"><a href="#CSR-证书请求文件" class="headerlink" title="CSR(证书请求文件)"></a>CSR(证书请求文件)</h3><p>文本格式</p>
-<p>用于通过证书请求文件生成证书。</p>
-<h3 id="PEM-Privacy-Enhanced-Mail"><a href="#PEM-Privacy-Enhanced-Mail" class="headerlink" title="PEM(Privacy Enhanced Mail)"></a>PEM(Privacy Enhanced Mail)</h3><p>文本格式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">查看</span><br><span class="line">openssl x509 -in certificate.pem -text -noout</span><br><span class="line"></span><br><span class="line">转成DER</span><br><span class="line">openssl x509 -in certificate.pem -outform der -out certificate.der</span><br><span class="line"></span><br><span class="line">格式</span><br><span class="line">-----BEGIN CERTIFICATE-----</span><br><span class="line">Base64</span><br><span class="line">-----END CERTIFICATE-----</span><br></pre></td></tr></table></figure>
-
-<h3 id="DER"><a href="#DER" class="headerlink" title="DER"></a>DER</h3><p>二进制格式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">查看</span><br><span class="line">openssl x509 -in certificate.der -inform der -text -noout</span><br><span class="line"></span><br><span class="line">转成PEM</span><br><span class="line">openssl x509 -in certificate.der -inform der -outform pem -out certificate.pem</span><br></pre></td></tr></table></figure>
-
-<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">生成私钥</span><br><span class="line">openssl genrsa -out private.key 2048</span><br><span class="line">生成私钥带des密码</span><br><span class="line">openssl genrsa -des -out private.key 2048</span><br><span class="line">私钥获取公钥</span><br><span class="line">openssl rsa -in private.key -pubout -out public.key</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/通信/">通信</a>, <a href="/categories/通信/加密/">加密</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/基础知识/">基础知识</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -876,7 +881,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2020 ideath@operatorworld.com
+    &copy; 2021 ideath@operatorworld.com
     
   </p>
 </footer>
