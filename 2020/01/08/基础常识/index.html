@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>第 6 页 | Ewkoll</title>
+  <title>基础常识 | Ewkoll</title>
 
   
   <meta name="author" content="ideath@operatorworld.com">
@@ -14,12 +14,15 @@
   
 
   
+  
+  <meta name="keywords" content="">
+  
 
   <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  
+  <meta property="og:title" content="基础常识"/>
 
   <meta property="og:site_name" content="Ewkoll"/>
 
@@ -60,237 +63,11 @@
 </header>
 
     <main class="site-main posts-loop">
-    
-  <article>
+    <article>
 
   
     
-    <h3 class="article-title"><a href="/2020/05/12/GoWiki/"><span>GoWiki</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/12/GoWiki/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-12T07:57:22.000Z">
-          2020-05-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>关于GO语言的一些基础知识。<br><a href="https://github.com/golang/go/wiki" target="_blank" rel="noopener">https://github.com/golang/go/wiki</a></p>
-<p>关于go module的一些问题。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/12/Gopls/"><span>gopls</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/12/Gopls/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-12T07:55:46.000Z">
-          2020-05-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>关于语言服务器，代码自动提示。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/12/GO精确浮点数计算/"><span>GO精确浮点数计算</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/12/GO精确浮点数计算/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-12T07:33:34.000Z">
-          2020-05-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>浮点数问题在所有的语言开发过程中都会遇到，一旦涉及金融计算等一些需要准确结果的时候，需要重视并解决问题。</p>
-<p>Go与其他很多语言（C、C++、Python）一样，使用了IEEE-754标准存储浮点数。</p>
-<h3 id="浮点数基础"><a href="#浮点数基础" class="headerlink" title="浮点数基础"></a>浮点数基础</h3><p>符号位：1 为 负数，0 为正数。</p>
-<p>指数位：存储指数加上偏移量。</p>
-<p>小数位：存储系数的小数位的准确或者最接近的值。</p>
-<p>32浮点数存储 = 符号位[0:1] + 指数位[1:9] + 小数位[9:32] -&gt; 偏移量(2^(8-1)-1=127)</p>
-<p>64浮点数存储 = 符号位[0:1] + 指数位[1:12] + 小数位[12:64] -&gt; 偏移量(2^(11-1)-1=1023)</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">calcFloat</span><span class="params">()</span></span> &#123;</span><br><span class="line">    pi := math.Pi</span><br><span class="line">    bits := math.Float64bits(<span class="number">-1</span> * pi)</span><br><span class="line">    binary := fmt.Sprintf(<span class="string">"%.64b"</span>, bits)</span><br><span class="line">    fmt.Printf(<span class="string">"Bit Pattern: %s | %s | %s %s %s %s %s %s %s %s %s %s %s %s %s \n\n"</span>,</span><br><span class="line">        binary[<span class="number">0</span>:<span class="number">1</span>],</span><br><span class="line">        binary[<span class="number">1</span>:<span class="number">12</span>],</span><br><span class="line">        binary[<span class="number">12</span>:<span class="number">16</span>], binary[<span class="number">16</span>:<span class="number">20</span>],</span><br><span class="line">        binary[<span class="number">20</span>:<span class="number">24</span>], binary[<span class="number">24</span>:<span class="number">28</span>], binary[<span class="number">28</span>:<span class="number">32</span>],</span><br><span class="line">        binary[<span class="number">32</span>:<span class="number">36</span>], binary[<span class="number">36</span>:<span class="number">40</span>], binary[<span class="number">40</span>:<span class="number">44</span>],</span><br><span class="line">        binary[<span class="number">44</span>:<span class="number">48</span>], binary[<span class="number">48</span>:<span class="number">52</span>], binary[<span class="number">52</span>:<span class="number">56</span>],</span><br><span class="line">        binary[<span class="number">56</span>:<span class="number">60</span>], binary[<span class="number">60</span>:<span class="number">64</span>])</span><br><span class="line"></span><br><span class="line">    offest := <span class="number">1023</span></span><br><span class="line">    sign := bits &gt;&gt; <span class="number">63</span></span><br><span class="line">    exponentRaw := <span class="keyword">int</span>(bits&gt;&gt;<span class="number">52</span>) &amp; <span class="number">0x7ff</span></span><br><span class="line">    exponent := exponentRaw - offest</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> mantissa <span class="keyword">float64</span></span><br><span class="line">    <span class="keyword">for</span> index, bit := <span class="keyword">range</span> binary[<span class="number">12</span>:<span class="number">64</span>] &#123;</span><br><span class="line">        <span class="keyword">if</span> bit == <span class="number">49</span> &#123;</span><br><span class="line">            position := index + <span class="number">1</span></span><br><span class="line">            bitValue := math.Pow(<span class="number">2</span>, <span class="keyword">float64</span>(position))</span><br><span class="line">            fractional := <span class="number">1</span> / bitValue</span><br><span class="line">            mantissa = mantissa + fractional</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> sign &gt; <span class="number">0</span> &#123;</span><br><span class="line">        value := (<span class="number">1</span> + mantissa) * math.Pow(<span class="number">2</span>, <span class="keyword">float64</span>(exponent)) * <span class="number">-1</span></span><br><span class="line">        fmt.Println(value)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        value := (<span class="number">1</span> + mantissa) * math.Pow(<span class="number">2</span>, <span class="keyword">float64</span>(exponent))</span><br><span class="line">        fmt.Println(value)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Bit Pattern: 1 | 10000000000 | 1001 0010 0001 1111 1011 0101 0100 0100 0100 0010 1101 0001 1000 </span></span><br><span class="line"><span class="comment">-3.141592653589793</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="浮点数打印"><a href="#浮点数打印" class="headerlink" title="浮点数打印"></a>浮点数打印</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 如果浮点数声明时未指定变量的类型，默认为 float64 类型</span></span><br><span class="line">    <span class="keyword">var</span> n1 = <span class="number">3.99</span></span><br><span class="line">    fmt.Printf(<span class="string">"n1的值为 %g, 类型是 %T, 占 %d 个字节\n"</span>, n1, n1, unsafe.Sizeof(n1))</span><br><span class="line">    <span class="comment">// n1的值为 3.99, 类型是 float64, 占 8 个字节</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用类型推导</span></span><br><span class="line">    n2 := <span class="number">4.567</span></span><br><span class="line">    fmt.Printf(<span class="string">"n2的值为 %g, 类型是 %T, 占 %d 个字节\n"</span>, n2, n2, unsafe.Sizeof(n2))</span><br><span class="line">    <span class="comment">// 2的值为 4.567, 类型是 float64, 占 8 个字节</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明为 float32 类型</span></span><br><span class="line">    <span class="keyword">var</span> n3 <span class="keyword">float32</span> = <span class="number">1.6789</span></span><br><span class="line">    fmt.Printf(<span class="string">"n3的值为 %g, 类型是 %T, 占 %d 个字节\n"</span>, n3, n3, unsafe.Sizeof(n3))</span><br><span class="line">    <span class="comment">// n3的值为 1.6789, 类型是 float32, 占 4 个字节</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在用Printf进行格式化输出时，最好用 %g或%G 进行</span></span><br><span class="line">    <span class="comment">// 格式化输出，如果用 %f 的话可能会造成精度丢失导致数据不准确</span></span><br><span class="line">    <span class="keyword">var</span> f1 <span class="keyword">float32</span> = <span class="number">1.209800087</span></span><br><span class="line">    fmt.Println(<span class="string">"f1 ="</span>, f1)         <span class="comment">// f1 = 1.2098001</span></span><br><span class="line">    fmt.Printf(<span class="string">"f1 = %f\n"</span>, f1)     <span class="comment">// f1 = 1.209800</span></span><br><span class="line">    fmt.Printf(<span class="string">"f1 = %0.16f\n"</span>, f1) <span class="comment">// f1 = 1.2098001241683960</span></span><br><span class="line">    fmt.Printf(<span class="string">"f1 = %g\n"</span>, f1)     <span class="comment">// f1 = 1.2098001</span></span><br><span class="line">    fmt.Printf(<span class="string">"f1 = %G\n"</span>, f1)     <span class="comment">// f1 = 1.2098001</span></span><br><span class="line">    fmt.Printf(<span class="string">"f1 = %e\n"</span>, f1)     <span class="comment">// f1 = 1.209800e+00</span></span><br><span class="line">    fmt.Printf(<span class="string">"f1 = %E\n"</span>, f1)     <span class="comment">// f1 = 1.209800E+00</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 负的浮点型</span></span><br><span class="line">    f2 := <span class="number">-35412378.431267890112</span></span><br><span class="line">    fmt.Printf(<span class="string">"f2 = %f, %g, %G, %e, %E %T\n"</span>, f2, f2, f2, f2, f2, f2)</span><br><span class="line">    <span class="comment">// f2 = -35412378.431268, -3.541237843126789e+07, -3.541237843126789E+07, -3.541238e+07, -3.541238E+07 float64</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用float32类型时，有时尾数部分可能丢失，造成精度损失</span></span><br><span class="line">    <span class="keyword">var</span> f3 <span class="keyword">float32</span> = <span class="number">444.000068889955</span></span><br><span class="line">    <span class="keyword">var</span> f4 <span class="keyword">float64</span> = <span class="number">444.000068889955</span></span><br><span class="line">    fmt.Println(<span class="string">"f3 ="</span>, f3, <span class="string">"f4 ="</span>, f4)</span><br><span class="line">    <span class="comment">// f3 = 444.00006 f4 = 444.000068889955</span></span><br><span class="line"></span><br><span class="line">    fmt.Printf(<span class="string">"f3 = %f, %g, %G, %e, %E\n"</span>, f3, f3, f3, f3, f3)</span><br><span class="line">    <span class="comment">// f3 = 444.000061, 444.00006, 444.00006, 4.440001e+02, 4.440001E+02</span></span><br><span class="line"></span><br><span class="line">    fmt.Printf(<span class="string">"f4 = %f, %g, %G, %e, %E\n"</span>, f4, f4, f4, f4, f4) <span class="comment">// f4 = 444.000069, 444.000068889955, 444.000068889955, 4.440001e+02, 4.440001E+02</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="浮点数精确计算"><a href="#浮点数精确计算" class="headerlink" title="浮点数精确计算"></a>浮点数精确计算</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Decimal</span><span class="params">()</span></span> &#123;</span><br><span class="line">    price, err := decimal.NewFromString(<span class="string">"136.02"</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="built_in">panic</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//decimal.DivisionPrecision = 5</span></span><br><span class="line">    quantity := decimal.NewFromInt(<span class="number">3</span>)</span><br><span class="line">    fee, _ := decimal.NewFromString(<span class="string">".035"</span>)</span><br><span class="line">    taxRate, _ := decimal.NewFromString(<span class="string">".0887577767687878798866666666666333333"</span>)</span><br><span class="line"></span><br><span class="line">    subtotal := price.Mul(quantity)</span><br><span class="line">    preTax := subtotal.Mul(fee.Add(decimal.NewFromFloat(<span class="number">1</span>)))</span><br><span class="line">    total := preTax.Mul(taxRate.Add(decimal.NewFromFloat(<span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">    fmt.Println(<span class="string">"Subtotal:"</span>, subtotal)                               <span class="comment">// Subtotal: 408.06</span></span><br><span class="line">    fmt.Println(<span class="string">"Pre-tax:"</span>, preTax)                                  <span class="comment">// Pre-tax: 422.3421</span></span><br><span class="line">    fmt.Println(<span class="string">"Taxes:"</span>, total.Sub(preTax))                         <span class="comment">// Taxes: 37.482861375</span></span><br><span class="line">    fmt.Println(<span class="string">"Total:"</span>, total)                                     <span class="comment">// Total: 459.824961375</span></span><br><span class="line">    fmt.Println(<span class="string">"Tax rate:"</span>, total.Sub(preTax).Div(preTax))          <span class="comment">// Tax rate: 0.08875</span></span><br><span class="line"></span><br><span class="line">    fmt.Println(<span class="string">"Subtotal:"</span>, subtotal.Round(<span class="number">5</span>))                      <span class="comment">// Subtotal: 408.06</span></span><br><span class="line">    fmt.Println(<span class="string">"Pre-tax:"</span>, preTax.Round(<span class="number">5</span>))                         <span class="comment">// Pre-tax: 422.3421</span></span><br><span class="line">    fmt.Println(<span class="string">"Taxes:"</span>, total.Sub(preTax).Round(<span class="number">5</span>))                <span class="comment">// Taxes: 37.482861375</span></span><br><span class="line">    fmt.Println(<span class="string">"Total:"</span>, total.Round(<span class="number">5</span>))                            <span class="comment">// Total: 459.824961375</span></span><br><span class="line">    fmt.Println(<span class="string">"Tax rate:"</span>, total.Sub(preTax).Div(preTax).Round(<span class="number">5</span>)) <span class="comment">// Tax rate: 0.08875</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Subtotal: 408.06</span></span><br><span class="line"><span class="comment">        Pre-tax: 422.3421</span></span><br><span class="line"><span class="comment">        Taxes: 37.48614583186108764588256199998592191592193</span></span><br><span class="line"><span class="comment">        Total: 459.82824583186108764588256199998592191592193</span></span><br><span class="line"><span class="comment">        Tax rate: 0.0887577767687879</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">        Subtotal: 408.06</span></span><br><span class="line"><span class="comment">        Pre-tax: 422.3421</span></span><br><span class="line"><span class="comment">        Taxes: 37.48615</span></span><br><span class="line"><span class="comment">        Total: 459.82825</span></span><br><span class="line"><span class="comment">        Tax rate: 0.08876</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>浮点数精确计算涉及大数存储计算相关的内容。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/GO/">GO</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/GO/">GO</a><a href="/tags/数学计算/">数学计算</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/05/12/Leveldb/"><span>leveldb</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/05/12/Leveldb/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-05-12T06:42:35.000Z">
-          2020-05-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/数据结构/">数据结构</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/BI/">BI</a><a href="/tags/Fabric/">Fabric</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/01/08/基础常识/"><span>基础常识</span></a></h3>
+    <h3 class="article-title"><span>基础常识</span></h3>
     
   
 
@@ -658,15 +435,32 @@
   </div>
 </article>
 
+  
+	<section id="comment" class="comment">
+		<div id="gitalk-container"></div>
+	</section>
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var gitalk = new Gitalk({
+			clientID: '6439928df4e0148ede52',
+			clientSecret: '05309198bf54b50a56b976deba7e9cb59fcdfd64',
+			repo: 'knowledge',
+			owner: 'Ewkoll',
+			admin: ['Ewkoll'],
+			id: decodeURI(location.pathname),
+			distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
 
 
 
-<nav class="pagination">
-  
-  <a href="/page/5/" class="pagination-prev">上一页</a>
-  
-  
-</nav>
+
+
+
+
     </main>
 
     <footer class="site-footer">
