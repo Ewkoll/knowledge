@@ -235,11 +235,11 @@
 <p>friend class Other 声明在某个类中, 表明友元类可以访问声明类的所以私有数据.</p>
 <h3 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h3><p>Run-Time Type Identification 运行时类类型识别</p>
 <p>场景:</p>
-<pre><code>(父类) GameObject
+<pre><code>(父类) GameObject   
 
-(子类) HumanObject AnimalObject CarObject ChickenObject FirearmObject GunObject
+(子类) HumanObject AnimalObject CarObject ChickenObject FirearmObject GunObject     
 
-参数传递父类对象, 通过RTTI识别并执行不同的逻辑代码(简单举例, 这个场景更多的会使用虚函数执行逻辑), 这种逻辑补丁代码是不良的代码设计缺陷.</code></pre><p>使用基类指针或者引用检查实际派生类对象类型</p>
+参数传递父类对象, 通过RTTI识别并执行不同的逻辑代码(简单举例, 这个场景更多的会使用虚函数执行逻辑), 这种逻辑补丁代码是不良的代码设计缺陷.     </code></pre><p>使用基类指针或者引用检查实际派生类对象类型</p>
 <blockquote>
 <p>RTTI的场景, 主要是在复杂多继承关系中切换对象指针或者引用的时候才有必须要使用RTTI, 大多时候简单的父子关系的指针偏移一般都是为0的, 在多继承关系通过RTTI来切换对象派生类, 用于访问派生类的成员. </p>
 </blockquote>
@@ -386,6 +386,7 @@
 <p><strong>智能指针</strong></p>
 <p><strong><em>make_shared</em></strong></p>
 <p><a href="https://www.jianshu.com/p/03eea8262c11" target="_blank" rel="noopener">make_shared</a></p>
+<p>std::make_shared 核心使用完美转发在正确调用构造函数.</p>
 <p><strong>左值、右值</strong></p>
 <p>左值: 等号左边<br>右值: 等号右边</p>
 <p>左值 lvalue 是有标识符、可以取地址的表达式，最常见的情况有：</p>
@@ -410,6 +411,15 @@
 <li><p>除<strong><em>字符串字面量</em></strong>之外的字面量，如 42、true</p>
 </li>
 </ul>
+<p><strong><em>扩展问题</em></strong></p>
+<p>1、为什么a++是右值, ++a是左值?</p>
+<blockquote>
+<p>简单的说 &amp;(++x) 可以获得地址. 返回x的内存地址.<br>&amp;(++x) 无法编译.</p>
+</blockquote>
+<p>2、return临时变量, 这个表达式是左值还是右值?</p>
+<blockquote>
+<p>无法对 return 变量 表达式执行取地址.<br>因为 return 对象内存是在寄存器中, 不能获取到地址, 因此是纯右值, NRVO返回值优化, 编译器直接把返回对象构造到调用者的栈上.</p>
+</blockquote>
 <p><strong>右值引用</strong></p>
 <ul>
 <li>右值引用可以使用const或者volatile来修饰.</li>
@@ -423,7 +433,28 @@
 <blockquote>
 <p>std::move(t2) 这样有名字右值, 我们叫它将亡值, 将亡值是不能取地址的, 因此还是右值.<br>值类型 == 引用类型<br>值类别 == 左值右值<br>go 语言都是按值传递的, map、slice在函数传参过程中都是按值传递, 因为修改的是对象内存地址, 因此在函数中修改, 外部会变.<br>python 中一切都是引用.<br>java 中按值传递</p>
 </blockquote>
+<p><strong><em>移动语义</em></strong></p>
+<blockquote>
+<p>核心是为了减少开销. 返回大对象减少内存空间的申请释放.</p>
+</blockquote>
 <p><strong>变量生命周期</strong></p>
+<p>在栈中构造的对象, 按照栈的顺序, 先声明后销毁, 生成顺序逆序销毁, 除非延长某个对象的生命周期.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> result(); &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123; result &amp;&amp;r = func(); &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>把result()对象的生命周期延长到main函数中, 执行main函数结束才会析构result对象.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">shape</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~shape() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">circle</span> :</span> <span class="keyword">public</span> shape</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">circle</span>() &#123; <span class="built_in">puts</span>(<span class="string">"circle()"</span>); &#125;</span><br><span class="line">    ~<span class="built_in">circle</span>() &#123; <span class="built_in">puts</span>(<span class="string">"~circle()"</span>); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">triangle</span> :</span> <span class="keyword">public</span> shape</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    triangle() &#123; <span class="built_in">puts</span>(<span class="string">"triangle()"</span>); &#125;</span><br><span class="line">    ~triangle() &#123; <span class="built_in">puts</span>(<span class="string">"~triangle()"</span>); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">result</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    result() &#123; <span class="built_in">puts</span>(<span class="string">"result()"</span>); &#125;</span><br><span class="line">    ~result() &#123; <span class="built_in">puts</span>(<span class="string">"~result()"</span>); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">result <span class="title">process_shape</span><span class="params">(<span class="keyword">const</span> shape &amp;shape1, <span class="keyword">const</span> shape &amp;shape2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">"process_shape()"</span>);</span><br><span class="line">    <span class="keyword">return</span> result();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">"main()"</span>);</span><br><span class="line">    <span class="comment">// 都会延长result对象的的生命周期, NRVO直接把对象构造在r对象的栈上.</span></span><br><span class="line">    result r = process_shape(<span class="built_in">circle</span>(), triangle());</span><br><span class="line">    result &amp;&amp;r1 = process_shape(<span class="built_in">circle</span>(), triangle());</span><br><span class="line">    <span class="comment">// 把纯右值绑定到将亡值上并赋值给变量的右值引用, 这会导致未定义的行为. r2引用的对象已经不存在.</span></span><br><span class="line">    result &amp;&amp;r2 = <span class="built_in">std</span>::<span class="built_in">move</span>(process_shape(<span class="built_in">circle</span>(), triangle()));</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">"something else"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>NRVO</strong></p>
+<p>named return value optionmization</p>
+<p>通过直接返回一个变量, 会存在返回值优化.</p>
+<p>返回值, 存在分支判断, 会组织返回值优化, 在C++11之后会使用move语义转移出去. 之前会拷贝出去.</p>
+<p>std::move将会影响返回值优化.</p>
+<p><strong><em>引用坍缩</em></strong></p>
+<p>模版代码中针对T&amp;&amp;右值引用, 如果传递左值T&amp;, 参数会坍缩为左值引用.</p>
+<p><strong><em>完美转发</em></strong></p>
+<p>std::forward 保证模版代码中左值、右值引用在参数传递过程中不会发生引用坍缩.</p>
 <h2 id="理解并发的复杂性"><a href="#理解并发的复杂性" class="headerlink" title="理解并发的复杂性"></a>理解并发的复杂性</h2><ul>
 <li>C++98下编译器可以调整代码执行顺序, 只要保证可观测的外部行为一致.</li>
 <li>CPU本身也会乱序执行, 多核CPU下, 不同CPU运行不同的线程, 可能因为代码问题, 导致逻辑非预期.</li>
@@ -483,7 +514,75 @@
 <p>总线锁, 就是CPU使用#LOCK信号, 其它CPU的请求会被阻塞, 该处理器能够独立使用共享内存数据.</p>
 <p><strong>缓存锁定</strong></p>
 <p>CPU缓存行中内存区域数据在 #LOCK 操作期间被锁定, 缓存一致性机制会阻止被两个以上处理器同时修改缓存在内存区域的数据.</p>
+<h2 id="顺序容器"><a href="#顺序容器" class="headerlink" title="顺序容器"></a>顺序容器</h2><p><strong>string</strong></p>
+<p>模版basic_string对于char类型的特化, 只存放字符类型的容器.</p>
+<blockquote>
+<p>我一般不建议在接口中使用 const string&amp;，除非确知调用者已经持有 string, 如果函数里不对字符串做复杂处理的话，使用 const char* 可以避免在调用者只有 C 字符串时编译器自动构造 string，这种额外的构造和析构代价并不低。<br>为了解决此问题, 在C++17可以使用std::string_view作为参数传递字符容器, 可以保证即使入参是字符串的情况, 能避免string对象的构造, 避免内存复制.</p>
+</blockquote>
+<p><strong>vector</strong></p>
+<p>动态数组, 内存连续存放, 并且自动扩容.</p>
+<ul>
+<li>capacity() 返回容器容量大小.</li>
+<li>size() 返回容器已经使用大小.</li>
+<li>resize() 改变容器大小, 执行后等于size(). <strong><em>在容器末尾添加或者删除元素,最终等于size()大小</em></strong></li>
+<li>reserve() <strong><em>操作保证容器的容量比指定值大</em></strong></li>
+<li>data() 返回裸指针</li>
+<li>pop_back() 删除最后一个</li>
+<li>push_back() 尾部插入.</li>
+<li>insert() 指定位置插入.</li>
+<li>erase() 删除指定位置.</li>
+<li>emplace() 指定位置构造. </li>
+<li>emplace_back() 尾部构造一个元素.</li>
+<li>at方式访问容器, 会检查是否内存越界.</li>
+<li>容器存在重新申请内存, 对象拷贝, 元素内存释放的过程, 迭代器失效就是很容易理解为什么会发生.</li>
+</ul>
+<blockquote>
+<p>部分函数会导致内存重新分配, insert、erase 会导致元素位置移动, 移动会调整元素在内存中的位置, vector保证强异常安全性, <strong>如果元素没有提供保证不抛出异常的移动构造函数, vector默认使用拷贝构造函数, 这也是为什么移动构造函数需要加noexcept标志的原因</strong><br>emplace是C++11为了提升性能的方法, 对比push_back操作会减少一个对象构造和析构的时间, 如果实现了移动语义, 性能就跟emplace差不多, 没有实现就存在较大差异.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;Obj&gt; v1;</span><br><span class="line">v1.reserve(<span class="number">2</span>);</span><br><span class="line">v1.emplace_back();</span><br><span class="line">v1.emplace_back();</span><br><span class="line">v1.emplace_back();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 容量只有2的大小, 执行到第三个元素的时候, 发现空间不够, 会申请扩容, 然后把前2个元素拷贝到新的空间.</span></span><br></pre></td></tr></table></figure>
 
+<p><strong><em>扩展问题</em></strong></p>
+<p>Mac下看内存比较麻烦, 在VS编译器下看下在容器在移动和扩容时候, 元素移动问题.</p>
+<p><strong>deque</strong></p>
+<p>双端对列, 尾部和头部随便添加元素.</p>
+<img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/3.png" class="" title="内存布局, 吴大师那拷贝的图片">
+
+<p><strong>list</strong></p>
+<p>双向链表, 对比vector优化在容器中删除和插入元素.</p>
+<ul>
+<li>没有下标访问, 很容易理解为什么.</li>
+<li>O(1) 复杂度的插入和删除.</li>
+<li>执行标准算法, 会导致问题. std::sort不能排序list容器.</li>
+</ul>
+<img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/4.png" class="" title="内存布局, 吴大师那拷贝的图片">
+
+<p><strong>forward_list</strong></p>
+<p>单向链表, 对比双向链表节约内存非常多.</p>
+<ul>
+<li>没有insert, 很容易理解, 单向链表没有前个元素的指针, 如何插入到当前元素之前, 增加了insert_after方法.</li>
+<li>元素不多的时候, 内存占用小.</li>
+</ul>
+<img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/5.png" class="" title="内存布局, 吴大师那拷贝的图片">
+
+<h2 id="容器适配器-container-adaptor"><a href="#容器适配器-container-adaptor" class="headerlink" title="容器适配器( container adaptor )"></a>容器适配器( container adaptor )</h2><p><strong>queue</strong></p>
+<p>对列, 先进先出 (FIFO) 数据结构.</p>
+<ul>
+<li>只能从前面pop元素</li>
+<li>只能从后面push、emplace元素.</li>
+<li>没有下标, 没有begin、end成员函数.</li>
+</ul>
+<img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/6.png" class="" title="内存布局, 吴大师那拷贝的图片">
+
+<p><strong>stack</strong></p>
+<p>栈, 后进先出 (LIFO) 数据结构.</p>
+<ul>
+<li>没有下标, 没有begin、end成员函数.</li>
+<li>只能操作top元素.</li>
+<li>push、emplace入栈, pop 出栈.</li>
+</ul>
+<img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/7.png" class="" title="内存布局, 吴大师那拷贝的图片">
+
+<h2 id="关联容器"><a href="#关联容器" class="headerlink" title="关联容器"></a>关联容器</h2>
       
     </div>
 
