@@ -87,18 +87,20 @@
   <div class="article-content">
     <div class="entry">
       
-        <h3 id="KEY"><a href="#KEY" class="headerlink" title="KEY"></a>KEY</h3><p>私钥</p>
+        <h3 id="key"><a class="markdownIt-Anchor" href="#key"></a> KEY</h3>
+<p>私钥</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">生成</span><br><span class="line">openssl genrsa -out server.key 2048</span><br><span class="line"></span><br><span class="line">格式</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">Base64</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
-
-<h3 id="CSR-证书请求文件"><a href="#CSR-证书请求文件" class="headerlink" title="CSR(证书请求文件)"></a>CSR(证书请求文件)</h3><p>文本格式</p>
+<h3 id="csr证书请求文件"><a class="markdownIt-Anchor" href="#csr证书请求文件"></a> CSR(证书请求文件)</h3>
+<p>文本格式</p>
 <p>用于通过证书请求文件生成证书。</p>
-<h3 id="PEM-Privacy-Enhanced-Mail"><a href="#PEM-Privacy-Enhanced-Mail" class="headerlink" title="PEM(Privacy Enhanced Mail)"></a>PEM(Privacy Enhanced Mail)</h3><p>文本格式</p>
+<h3 id="pemprivacy-enhanced-mail"><a class="markdownIt-Anchor" href="#pemprivacy-enhanced-mail"></a> PEM(Privacy Enhanced Mail)</h3>
+<p>文本格式</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">查看</span><br><span class="line">openssl x509 -in certificate.pem -text -noout</span><br><span class="line"></span><br><span class="line">转成DER</span><br><span class="line">openssl x509 -in certificate.pem -outform der -out certificate.der</span><br><span class="line"></span><br><span class="line">格式</span><br><span class="line">-----BEGIN CERTIFICATE-----</span><br><span class="line">Base64</span><br><span class="line">-----END CERTIFICATE-----</span><br></pre></td></tr></table></figure>
-
-<h3 id="DER"><a href="#DER" class="headerlink" title="DER"></a>DER</h3><p>二进制格式</p>
+<h3 id="der"><a class="markdownIt-Anchor" href="#der"></a> DER</h3>
+<p>二进制格式</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">查看</span><br><span class="line">openssl x509 -in certificate.der -inform der -text -noout</span><br><span class="line"></span><br><span class="line">转成PEM</span><br><span class="line">openssl x509 -in certificate.der -inform der -outform pem -out certificate.pem</span><br></pre></td></tr></table></figure>
-
-<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">生成私钥</span><br><span class="line">openssl genrsa -out private.key 2048</span><br><span class="line">生成私钥带des密码</span><br><span class="line">openssl genrsa -des -out private.key 2048</span><br><span class="line">私钥获取公钥</span><br><span class="line">openssl rsa -in private.key -pubout -out public.key</span><br></pre></td></tr></table></figure>
+<h3 id="其它"><a class="markdownIt-Anchor" href="#其它"></a> 其它</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">生成私钥</span><br><span class="line">openssl genrsa -out private.key 2048</span><br><span class="line">生成私钥带des密码</span><br><span class="line">openssl genrsa -des -out private.key 2048</span><br><span class="line">私钥获取公钥</span><br><span class="line">openssl rsa -in private.key -pubout -out public.key</span><br></pre></td></tr></table></figure>
       
     </div>
 

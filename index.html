@@ -30,7 +30,7 @@
   <link href="/favicon.ico" rel="icon">
   <link rel="alternate" href="/atom.xml" title="Ewkoll" type="application/atom+xml">
   <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
-<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css'><!-- hexo-inject:end --></head>
 
 
 <body>
@@ -864,21 +864,22 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="Mac下编译JDK8"><a href="#Mac下编译JDK8" class="headerlink" title="Mac下编译JDK8"></a>Mac下编译JDK8</h2><p>Mac系统版本11</p>
-<p>错误1: GCC compiler is required. Try setting –with-tools-dir.</p>
+        <h2 id="mac下编译jdk8"><a class="markdownIt-Anchor" href="#mac下编译jdk8"></a> Mac下编译JDK8</h2>
+<p>Mac系统版本11</p>
+<p>错误1: GCC compiler is required. Try setting --with-tools-dir.</p>
 <p>移除common/autoconf/generated-configure.sh中检测GCC编译器部分.</p>
 <p>错误2: Unable to find objcopy, cannot enable debug-symbols</p>
 <p>mdfind -name objcopy 找个 llvm-objcopy</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">./configure --with-debug-level=slowdebug \</span><br><span class="line">          --<span class="built_in">enable</span>-ccache \</span><br><span class="line">          --<span class="built_in">enable</span>-debug-symbols \</span><br><span class="line">          --with-jvm-variants=server \</span><br><span class="line">          OBJCOPY=llvm-objcopy</span><br></pre></td></tr></table></figure>
-
-<h2 id="JDK-调试"><a href="#JDK-调试" class="headerlink" title="JDK 调试"></a>JDK 调试</h2><p>CLion 直接导入src目录, 然后点击任意文件执行创建CmakeFile</p>
+<h2 id="jdk-调试"><a class="markdownIt-Anchor" href="#jdk-调试"></a> JDK 调试</h2>
+<p>CLion 直接导入src目录, 然后点击任意文件执行创建CmakeFile</p>
 <p>VSCode 调试</p>
 <p>launch.json</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Use IntelliSense to learn about possible attributes.</span></span><br><span class="line">    <span class="comment">// Hover to view descriptions of existing attributes.</span></span><br><span class="line">    <span class="comment">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span></span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"0.2.0"</span>,</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"(lldb) Launch"</span>,</span><br><span class="line">            <span class="attr">"type"</span>: <span class="string">"cppdbg"</span>,</span><br><span class="line">            <span class="attr">"request"</span>: <span class="string">"launch"</span>,</span><br><span class="line">            <span class="attr">"program"</span>: <span class="string">"$&#123;workspaceFolder&#125;/../jdk/build/macosx-x86_64-server-slowdebug/jdk/bin/java"</span>,</span><br><span class="line">            <span class="attr">"args"</span>: [<span class="string">"-cp"</span>, <span class="string">"."</span>, <span class="string">"HelloWorld"</span>],</span><br><span class="line">            <span class="comment">//"args": ["--version"],</span></span><br><span class="line">            <span class="attr">"stopAtEntry"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"cwd"</span>: <span class="string">"$&#123;workspaceFolder&#125;"</span>,</span><br><span class="line">            <span class="attr">"environment"</span>: [],</span><br><span class="line">            <span class="attr">"externalConsole"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"MIMode"</span>: <span class="string">"lldb"</span>,</span><br><span class="line">            <span class="attr">"setupCommands"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"description"</span>: <span class="string">"Enable pretty-printing for gdb"</span>,</span><br><span class="line">                    <span class="attr">"text"</span>: <span class="string">"-enable-pretty-printing"</span>,</span><br><span class="line">                    <span class="attr">"ignoreFailures"</span>: <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>c_cpp_properties.json</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"Mac"</span>,</span><br><span class="line">            <span class="attr">"includePath"</span>: [</span><br><span class="line">                <span class="string">"$&#123;workspaceFolder&#125;/**"</span>,</span><br><span class="line">                <span class="string">"$&#123;workspaceFolder&#125;/../jdk/src/**"</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"defines"</span>: [],</span><br><span class="line">            <span class="attr">"macFrameworkPath"</span>: [</span><br><span class="line">                <span class="string">"/System/Library/Frameworks"</span>,</span><br><span class="line">                <span class="string">"/Library/Frameworks"</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"compilerPath"</span>: <span class="string">"/usr/bin/clang"</span>,</span><br><span class="line">            <span class="attr">"cStandard"</span>: <span class="string">"c11"</span>,</span><br><span class="line">            <span class="attr">"cppStandard"</span>: <span class="string">"c++17"</span>,</span><br><span class="line">            <span class="attr">"intelliSenseMode"</span>: <span class="string">"clang-x64"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"version"</span>: <span class="number">4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置忽略SIGSEGV"><a href="#设置忽略SIGSEGV" class="headerlink" title="设置忽略SIGSEGV"></a>设置忽略SIGSEGV</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">process handle --pass true --stop false SIGSEGV</span><br><span class="line">process handle --pass true --stop false SIGBUS</span><br></pre></td></tr></table></figure>
+<h2 id="设置忽略sigsegv"><a class="markdownIt-Anchor" href="#设置忽略sigsegv"></a> 设置忽略SIGSEGV</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">process handle --pass true --stop false SIGSEGV</span><br><span class="line">process handle --pass true --stop false SIGBUS</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -923,23 +924,18 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
   <div class="article-content">
     <div class="entry">
       
-        <h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>安装</p>
+        <h3 id="环境"><a class="markdownIt-Anchor" href="#环境"></a> 环境</h3>
+<p>安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --proto &#39;&#x3D;https&#39; --tlsv1.2 -sSf https:&#x2F;&#x2F;sh.rustup.rs | sh</span><br></pre></td></tr></table></figure>
-
 <p>卸载</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup self uninstall</span><br></pre></td></tr></table></figure>
-
 <p>升级</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup update</span><br></pre></td></tr></table></figure>
-
 <p>包管理</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo --version</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustc --version</span><br></pre></td></tr></table></figure>
-
 <p>构建相关</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello-rust 创建项目</span><br><span class="line">cargo build 可以构建项目</span><br><span class="line">cargo run 可以运行项目</span><br><span class="line">cargo test 可以测试项目</span><br><span class="line">cargo doc 可以为项目构建文档</span><br><span class="line">cargo publish 可以将库发布到 crates.io。</span><br></pre></td></tr></table></figure>
-
 <p>Rust使用rustup进行安装和管理, rustup负责不同平台下Rust的版本兼容.</p>
 
       
@@ -986,10 +982,12 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="Spring-Jpa-自动创建表大小写规则"><a href="#Spring-Jpa-自动创建表大小写规则" class="headerlink" title="Spring Jpa 自动创建表大小写规则"></a>Spring Jpa 自动创建表大小写规则</h2><p>默认使用SpringPhysicalNamingStrategy实现, 会把代码中的表定义全部转换成小写.</p>
+        <h2 id="spring-jpa-自动创建表大小写规则"><a class="markdownIt-Anchor" href="#spring-jpa-自动创建表大小写规则"></a> Spring Jpa 自动创建表大小写规则</h2>
+<p>默认使用SpringPhysicalNamingStrategy实现, 会把代码中的表定义全部转换成小写.</p>
 <p>配置为PhysicalNamingStrategyStandardImpl将不转换任何命名.</p>
 <p>implicit-strategy 当不指定命名时候的隐式转换规则.</p>
-<h2 id="Jpa中引用关系使用Set会计算Hash会导致数据反复引用"><a href="#Jpa中引用关系使用Set会计算Hash会导致数据反复引用" class="headerlink" title="Jpa中引用关系使用Set会计算Hash会导致数据反复引用."></a>Jpa中引用关系使用Set会计算Hash会导致数据反复引用.</h2>
+<h2 id="jpa中引用关系使用set会计算hash会导致数据反复引用"><a class="markdownIt-Anchor" href="#jpa中引用关系使用set会计算hash会导致数据反复引用"></a> Jpa中引用关系使用Set会计算Hash会导致数据反复引用.</h2>
+
       
     </div>
 
@@ -1036,19 +1034,31 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
       
         <ol>
 <li>以太坊提供了 “fast”, “full”, “light” 三种数据同步模式</li>
-<li>原来还有 –fast,–light 两个命令行选项，现在已经被 –syncmode 取代</li>
+<li>原来还有 --fast,–light 两个命令行选项，现在已经被 --syncmode 取代</li>
 </ol>
-<p>当指定同步模式为 “fast” 时，以太坊节点会从网络同步所有的区块头，区块体以及状态数据，但不对区块中的交易进行重放，只会对区块中的数据进行校验。<br>当指定同步模式为”full”时，以太坊节点会从网络同步所有的区块头，区块体并重放区块中的交易以生成状态数据。<br>当指定同步模式为“light”时，以太坊节点仅从网络中同步所有区块头，不去同步区块体，也不去同步状态数据，仅在需要相应区块和状态数据时从网络上获取。</p>
+<p>当指定同步模式为 “fast” 时，以太坊节点会从网络同步所有的区块头，区块体以及状态数据，但不对区块中的交易进行重放，只会对区块中的数据进行校验。<br />
+当指定同步模式为&quot;full&quot;时，以太坊节点会从网络同步所有的区块头，区块体并重放区块中的交易以生成状态数据。<br />
+当指定同步模式为“light”时，以太坊节点仅从网络中同步所有区块头，不去同步区块体，也不去同步状态数据，仅在需要相应区块和状态数据时从网络上获取。</p>
 <p>当不指定任何模式时，默认为 “fast” 模式。</p>
-<h2 id="为啥要提供三种模式"><a href="#为啥要提供三种模式" class="headerlink" title="为啥要提供三种模式"></a>为啥要提供三种模式</h2><ol>
+<h2 id="为啥要提供三种模式"><a class="markdownIt-Anchor" href="#为啥要提供三种模式"></a> 为啥要提供三种模式</h2>
+<ol>
 <li>随着以太坊区块数据的越来越多，全节点同步，也就是“full”这种数据同步模式实在是太慢了，往往需要一周甚至更多时间。但以太坊网络又需要这些全节点去保存可追溯的历史数</li>
 <li>运行轻节点，也就是“light”这种数据同步模式，因为只需要同步区块头数据，数据同步在几个小时就可以完成，但很多操作都需要这些轻节点去网络上其它全节点去请求数据，显然仅仅靠轻节点去组成区块链网络是不现实的。</li>
 <li>“fast” 这种同步模式就是“full”模式和“light”模式的一个折衷，通过直接从网络同步状态数据而不是通过重放交易生成状态数据的方式，节省了很多时间，一般来说机器配置合理的话 2～3 天就可以完成主网数据同步。</li>
 </ol>
-<h2 id="三种模式的安全性"><a href="#三种模式的安全性" class="headerlink" title="三种模式的安全性"></a>三种模式的安全性</h2><p>毋庸置疑，全节点模式是最安全的，在这种模式下，所有区块和区块中的交易都会被逐一验证。<br>在 “fast” 这种数据同步模式下，比较靠近现在的区块和其中包含的交易也都会被逐一验证。但不会验证比较老的区块数据。<br>在 ”light“ 这种轻节点模式下，不会对区块和区块中的交易进行交易。但在需要处理特定区块相关交易或需要读取某个区块中相关的状态数据时，会通过区块头中的哈希值对区块和状态数据进行校验。</p>
-<h2 id="该用什么模式"><a href="#该用什么模式" class="headerlink" title="该用什么模式"></a>该用什么模式</h2><p>自己搭节点，没有特别需求的话，使用默认的 ”fast“ 同步模式就好了。<br>如果要在树莓派等低配置设备中，可以使用 ”light“ 同步模式。使用”light“模式时，本地签名并发送交易一般没什么问题，但要获取区块数据或账户余额时，对网络情况就有更多的要求了。<br>如果特别注重安全性，并且想获取所有区块链历史数据，只能使用全节点模式了。</p>
-<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>问题： light 节点与 full 节点是如何交互的？<br>解答： 首先，light 节点会维护多个与 full 节点的 p2p 连接。然后，当 light 节点需要与 full 节点交互时，会将需要发送的请求放到一个请求队列中。light 节点会启动一个 goroutine 不断从请求队列里获取请求，然后从 p2p 节点列表里选一个当前最好用的节点，将请求发出去。请求得到的结果会发到本地数据库和缓存里。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了自己搭节点时需要注意的几种数据同步模式。其实很多 DApp，包括一些去中心化钱包，自己是不搭节点，而是依赖于第三方节点比如 Infura 的。</p>
+<h2 id="三种模式的安全性"><a class="markdownIt-Anchor" href="#三种模式的安全性"></a> 三种模式的安全性</h2>
+<p>毋庸置疑，全节点模式是最安全的，在这种模式下，所有区块和区块中的交易都会被逐一验证。<br />
+在 “fast” 这种数据同步模式下，比较靠近现在的区块和其中包含的交易也都会被逐一验证。但不会验证比较老的区块数据。<br />
+在 ”light“ 这种轻节点模式下，不会对区块和区块中的交易进行交易。但在需要处理特定区块相关交易或需要读取某个区块中相关的状态数据时，会通过区块头中的哈希值对区块和状态数据进行校验。</p>
+<h2 id="该用什么模式"><a class="markdownIt-Anchor" href="#该用什么模式"></a> 该用什么模式</h2>
+<p>自己搭节点，没有特别需求的话，使用默认的 ”fast“ 同步模式就好了。<br />
+如果要在树莓派等低配置设备中，可以使用 ”light“ 同步模式。使用”light“模式时，本地签名并发送交易一般没什么问题，但要获取区块数据或账户余额时，对网络情况就有更多的要求了。<br />
+如果特别注重安全性，并且想获取所有区块链历史数据，只能使用全节点模式了。</p>
+<h2 id="常见问题"><a class="markdownIt-Anchor" href="#常见问题"></a> 常见问题</h2>
+<p>问题： light 节点与 full 节点是如何交互的？<br />
+解答： 首先，light 节点会维护多个与 full 节点的 p2p 连接。然后，当 light 节点需要与 full 节点交互时，会将需要发送的请求放到一个请求队列中。light 节点会启动一个 goroutine 不断从请求队列里获取请求，然后从 p2p 节点列表里选一个当前最好用的节点，将请求发出去。请求得到的结果会发到本地数据库和缓存里。</p>
+<h2 id="结语"><a class="markdownIt-Anchor" href="#结语"></a> 结语</h2>
+<p>本文介绍了自己搭节点时需要注意的几种数据同步模式。其实很多 DApp，包括一些去中心化钱包，自己是不搭节点，而是依赖于第三方节点比如 Infura 的。</p>
 
       
     </div>
@@ -1094,9 +1104,10 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
   <div class="article-content">
     <div class="entry">
       
-        <h3 id="2006-“MySQL-server-has-gone-away-BrokenPipeError-32-‘Broken-pipe’-”"><a href="#2006-“MySQL-server-has-gone-away-BrokenPipeError-32-‘Broken-pipe’-”" class="headerlink" title="(2006, “MySQL server has gone away (BrokenPipeError(32, ‘Broken pipe’))”)"></a>(2006, “MySQL server has gone away (BrokenPipeError(32, ‘Broken pipe’))”)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查询配置。</span><br><span class="line">select now()</span><br><span class="line">show VARIABLES like &#39;%max_allowed_packet%&#39;;</span><br><span class="line"></span><br><span class="line"># 修改配置</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;etc&#x2F;my.conf</span><br><span class="line"></span><br><span class="line"># 增加</span><br><span class="line">max_allowed_packet&#x3D;100M</span><br></pre></td></tr></table></figure>
+        <h3 id="2006-mysql-server-has-gone-away-brokenpipeerror32-broken-pipe"><a class="markdownIt-Anchor" href="#2006-mysql-server-has-gone-away-brokenpipeerror32-broken-pipe"></a> (2006, “MySQL server has gone away (BrokenPipeError(32, ‘Broken pipe’))”)</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查询配置。</span><br><span class="line">select now()</span><br><span class="line">show VARIABLES like &#39;%max_allowed_packet%&#39;;</span><br><span class="line"></span><br><span class="line"># 修改配置</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;etc&#x2F;my.conf</span><br><span class="line"></span><br><span class="line"># 增加</span><br><span class="line">max_allowed_packet&#x3D;100M</span><br></pre></td></tr></table></figure>
+<h2 id="mysql"><a class="markdownIt-Anchor" href="#mysql"></a> Mysql</h2>
 
-<h2 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h2>
       
     </div>
 
@@ -1201,28 +1212,29 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="爬虫框架"><a href="#爬虫框架" class="headerlink" title="爬虫框架"></a>爬虫框架</h2><p><a href="https://github.com/scrapy/scrapy" target="_blank" rel="noopener">scrapy</a> 爬虫框架<br><a href="https://github.com/scrapy/scrapyd" target="_blank" rel="noopener">scrapyd</a> 用于scrapy的调度程序<br><a href="https://github.com/lorien/grab" target="_blank" rel="noopener">grab</a> 爬虫框架（很久没更新）<br><a href="https://github.com/howie6879/ruia" target="_blank" rel="noopener">ruia</a> 基于asyncio和aiohttp异步爬虫框架（国内开源的）</p>
-<h2 id="可视化爬虫工具"><a href="#可视化爬虫工具" class="headerlink" title="可视化爬虫工具"></a>可视化爬虫工具</h2><p><a href="https://github.com/scrapinghub/portia" target="_blank" rel="noopener">portia</a> <strong>被废弃</strong></p>
-<h2 id="UI"><a href="#UI" class="headerlink" title="UI"></a>UI</h2><p><a href="docs.gerapy.com">gerapy</a></p>
+        <h2 id="爬虫框架"><a class="markdownIt-Anchor" href="#爬虫框架"></a> 爬虫框架</h2>
+<p><a href="https://github.com/scrapy/scrapy" target="_blank" rel="noopener">scrapy</a> 爬虫框架<br />
+<a href="https://github.com/scrapy/scrapyd" target="_blank" rel="noopener">scrapyd</a> 用于scrapy的调度程序<br />
+<a href="https://github.com/lorien/grab" target="_blank" rel="noopener">grab</a> 爬虫框架（很久没更新）<br />
+<a href="https://github.com/howie6879/ruia" target="_blank" rel="noopener">ruia</a> 基于asyncio和aiohttp异步爬虫框架（国内开源的）</p>
+<h2 id="可视化爬虫工具"><a class="markdownIt-Anchor" href="#可视化爬虫工具"></a> 可视化爬虫工具</h2>
+<p><a href="https://github.com/scrapinghub/portia" target="_blank" rel="noopener">portia</a> <strong>被废弃</strong></p>
+<h2 id="ui"><a class="markdownIt-Anchor" href="#ui"></a> UI</h2>
+<p><a href="docs.gerapy.com">gerapy</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac下安装文档生成工具，解决找不到sphinx-build</span><br><span class="line">sudo easy_install Sphinx</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">brew install sphinx</span><br><span class="line"></span><br><span class="line">安装依赖mysql</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;Cellar&#x2F;mysql@5.7&#x2F;5.7.29&#x2F;bin&#x2F;mysqld --initialize-insecure --user&#x3D;Erin --basedir&#x3D;&#x2F;usr&#x2F;local&#x2F;Cellar&#x2F;mysql@5.7&#x2F;5.7.29 --datadir&#x3D;&#x2F;usr&#x2F;local&#x2F;var&#x2F;mysql --tmpdir&#x3D;&#x2F;tmp</span><br><span class="line"></span><br><span class="line">We&#39;ve installed your MySQL database without a root password. To secure it run:</span><br><span class="line">    mysql_secure_installation</span><br><span class="line"></span><br><span class="line">MySQL is configured to only allow connections from localhost by default</span><br><span class="line"></span><br><span class="line">To connect run:</span><br><span class="line">    mysql -uroot</span><br><span class="line"></span><br><span class="line">mysql@5.7 is keg-only, which means it was not symlinked into &#x2F;usr&#x2F;local,</span><br><span class="line">because this is an alternate version of another formula.</span><br><span class="line"></span><br><span class="line"># 添加到环境变量</span><br><span class="line">If you need to have mysql@5.7 first in your PATH run:</span><br><span class="line">  echo &#39;export PATH&#x3D;&quot;&#x2F;usr&#x2F;local&#x2F;opt&#x2F;mysql@5.7&#x2F;bin:$PATH&quot;&#39; &gt;&gt; ~&#x2F;.zshrc</span><br><span class="line"></span><br><span class="line"># 编译需要查找mysql头文件和lib库的时候。</span><br><span class="line">For compilers to find mysql@5.7 you may need to set:</span><br><span class="line">  export LDFLAGS&#x3D;&quot;-L&#x2F;usr&#x2F;local&#x2F;opt&#x2F;mysql@5.7&#x2F;lib&quot;</span><br><span class="line">  export CPPFLAGS&#x3D;&quot;-I&#x2F;usr&#x2F;local&#x2F;opt&#x2F;mysql@5.7&#x2F;include&quot;</span><br><span class="line"></span><br><span class="line"># 使用pkg-config查找的时候，添加环境变量。</span><br><span class="line">For pkg-config to find mysql@5.7 you may need to set:</span><br><span class="line">  export PKG_CONFIG_PATH&#x3D;&quot;&#x2F;usr&#x2F;local&#x2F;opt&#x2F;mysql@5.7&#x2F;lib&#x2F;pkgconfig&quot;</span><br><span class="line"></span><br><span class="line"># 服务模式启动</span><br><span class="line">To have launchd start mysql@5.7 now and restart at login:</span><br><span class="line">  brew services start mysql@5.7</span><br><span class="line"></span><br><span class="line"># 常规启动</span><br><span class="line">Or, if you don&#39;t want&#x2F;need a background service you can just run:</span><br><span class="line">  &#x2F;usr&#x2F;local&#x2F;opt&#x2F;mysql@5.7&#x2F;bin&#x2F;mysql.server start</span><br><span class="line">  &#x2F;usr&#x2F;local&#x2F;opt&#x2F;mysql@5.7&#x2F;bin&#x2F;mysql.server stop</span><br></pre></td></tr></table></figure>
-
 <p><strong>初始化</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gerapy init</span><br></pre></td></tr></table></figure>
-
 <p><strong>配置数据库</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd gerapy</span><br><span class="line">gerapy migrate</span><br></pre></td></tr></table></figure>
-
 <p><strong>创建用户</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gerapy initadmin</span><br><span class="line">gerapy createsuperuser</span><br></pre></td></tr></table></figure>
-
 <p><strong>启动服务</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gerapy runserver</span><br><span class="line">gerapy runserver 0.0.0.0:8000</span><br><span class="line">gerapy runserver 0.0.0.0:8000 &gt; &#x2F;dev&#x2F;null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-
-<h2 id="打包Egg"><a href="#打包Egg" class="headerlink" title="打包Egg"></a>打包Egg</h2><p>1、安装setuptools工具, pip install setuptools</p>
+<h2 id="打包egg"><a class="markdownIt-Anchor" href="#打包egg"></a> 打包Egg</h2>
+<p>1、安装setuptools工具, pip install setuptools</p>
 <p>2、编写setup.py文件</p>
-<p>3、执行打包 python setup.py bdist_egg</p>
+<p>3、执行打包 python <a href="http://setup.py" target="_blank" rel="noopener">setup.py</a> bdist_egg</p>
 
       
     </div>

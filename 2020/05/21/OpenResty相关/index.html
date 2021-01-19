@@ -88,8 +88,8 @@
     <div class="entry">
       
         <img src="/2020/05/21/OpenResty%E7%9B%B8%E5%85%B3/1.png" class="">
-
-<h3 id="Nginx阶段"><a href="#Nginx阶段" class="headerlink" title="Nginx阶段"></a>Nginx阶段</h3><p>NGX_HTTP_POST_READ_PHASE: 接收完请求头之后的第一个阶段，它位于URI重写之前。</p>
+<h3 id="nginx阶段"><a class="markdownIt-Anchor" href="#nginx阶段"></a> Nginx阶段</h3>
+<p>NGX_HTTP_POST_READ_PHASE: 接收完请求头之后的第一个阶段，它位于URI重写之前。</p>
 <p>NGX_HTTP_SERVER_REWRITE_PHASE: 处理全局的(server block)的rewrite规则。Nginx会根据Host及端口找到对应的虚拟主机配置。</p>
 <p>NGX_HTTP_FIND_CONFIG_PHASE: 寻找Location配置阶段，该阶段可能会被执行多次，因为也可能有Location级别的重写指令。</p>
 <p>NGX_HTTP_REWRITE_PHASE: Location级别的uri重写阶段，该阶段执行Location基本的重写指令，也可能会被执行多次。</p>
@@ -100,43 +100,59 @@
 <p>NGX_HTTP_TRY_FILES_PHASE: try_files指令的处理阶段，如果没有配置try_files指令，则该阶段被跳过</p>
 <p>NGX_HTTP_CONTENT_PHASE: 内容生成阶段，该阶段产生响应，并发送到客户端</p>
 <p>NGX_HTTP_LOG_PHASE: 日志记录阶段，该阶段记录访问日志</p>
-<h3 id="OpenResty阶段"><a href="#OpenResty阶段" class="headerlink" title="OpenResty阶段"></a>OpenResty阶段</h3><ul>
-<li><p>init_by_Lua：初始化Nginx和预加载Lua(Nginx启动和Reload时执行)</p>
+<h3 id="openresty阶段"><a class="markdownIt-Anchor" href="#openresty阶段"></a> OpenResty阶段</h3>
 <ul>
-<li>Master进程执行<ul>
+<li>
+<p>init_by_Lua：初始化Nginx和预加载Lua(Nginx启动和Reload时执行)</p>
+<ul>
+<li>Master进程执行
+<ul>
 <li>启动阶段需要执行的代码。</li>
-<li>初始化Nginx的共享内存。  </li>
+<li>初始化Nginx的共享内存。</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>init_worker_by_lua*：每个工作进程(worker_processes)被创建时执行</p>
+<li>
+<p>init_worker_by_lua*：每个工作进程(worker_processes)被创建时执行</p>
+</li>
+</ul>
 <ul>
-<li>工作进程执行<ul>
-<li>定时任务 </li>
+<li>工作进程执行
+<ul>
+<li>定时任务</li>
 <li>健康检查</li>
 <li>定时获取配置信息。</li>
 </ul>
 </li>
 </ul>
+<ul>
+<li>
+<p>ssl_certificate_by_lua*：对https请求的处理</p>
 </li>
-<li><p>ssl_certificate_by_lua*：对https请求的处理</p>
+<li>
+<p>set_by_lua*：设置 nginx 变量；</p>
 </li>
-<li><p>set_by_lua*：设置 nginx 变量；</p>
+<li>
+<p>rewrite_by_lua*：重写请求;</p>
 </li>
-<li><p>rewrite_by_lua*：重写请求;</p>
+<li>
+<p>access_by_lua*：访问控制（黑白名单）；</p>
 </li>
-<li><p>access_by_lua*：访问控制（黑白名单）；</p>
+<li>
+<p>content_by_lua*：执行业务逻辑并产生响应；</p>
 </li>
-<li><p>content_by_lua*：执行业务逻辑并产生响应；</p>
+<li>
+<p>balancer_by_lua*：负载均衡upstream中使用；</p>
 </li>
-<li><p>balancer_by_lua*：负载均衡upstream中使用；</p>
+<li>
+<p>header_filter_by_lua*：过滤响应头；</p>
 </li>
-<li><p>header_filter_by_lua*：过滤响应头；</p>
+<li>
+<p>body_filter_by_lua*：过滤响应体；</p>
 </li>
-<li><p>body_filter_by_lua*：过滤响应体；</p>
-</li>
-<li><p>log_by_lua*：记录访问日志；</p>
+<li>
+<p>log_by_lua*：记录访问日志；</p>
 </li>
 </ul>
 <p><a href="https://github.com/openresty/lua-nginx-module" target="_blank" rel="noopener">文档地址</a></p>
