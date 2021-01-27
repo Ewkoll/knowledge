@@ -397,9 +397,6 @@
 <p>如果数组是有大小的, 将按照对齐规则执行对齐.</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sds</span>&#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> len;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">0</span>];<span class="comment">//或char buf[]</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lu %lu %lu %lu %lu %lu %lu\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>), <span class="keyword">sizeof</span>(short), <span class="keyword">sizeof</span>(<span class="keyword">long</span>), <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>), <span class="keyword">sizeof</span>(<span class="keyword">float</span>), <span class="keyword">sizeof</span>(<span class="keyword">double</span>), <span class="keyword">sizeof</span>(<span class="keyword">int</span> *));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lu"</span>, <span class="keyword">sizeof</span>(sds));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">*** Dumping AST Record Layout</span></span><br><span class="line"><span class="comment">         0 | struct sds</span></span><br><span class="line"><span class="comment">         0 |   unsigned int len</span></span><br><span class="line"><span class="comment">         4 |   unsigned int free</span></span><br><span class="line"><span class="comment">         8 |   char [0] buf</span></span><br><span class="line"><span class="comment">           | [sizeof=8, dsize=8, align=4,</span></span><br><span class="line"><span class="comment">           |  nvsize=8, nvalign=4]</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sds</span>&#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> len;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">5</span>];<span class="comment">//或char buf[]</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lu %lu %lu %lu %lu %lu %lu\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>), <span class="keyword">sizeof</span>(short), <span class="keyword">sizeof</span>(<span class="keyword">long</span>), <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>), <span class="keyword">sizeof</span>(<span class="keyword">float</span>), <span class="keyword">sizeof</span>(<span class="keyword">double</span>), <span class="keyword">sizeof</span>(<span class="keyword">int</span> *));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lu"</span>, <span class="keyword">sizeof</span>(sds));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">*** Dumping AST Record Layout</span></span><br><span class="line"><span class="comment">         0 | struct sds</span></span><br><span class="line"><span class="comment">         0 |   unsigned int len</span></span><br><span class="line"><span class="comment">         4 |   unsigned int free</span></span><br><span class="line"><span class="comment">         8 |   char [5] buf</span></span><br><span class="line"><span class="comment">           | [sizeof=16, dsize=16, align=4,</span></span><br><span class="line"><span class="comment">           |  nvsize=16, nvalign=4]</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-<p><strong>进程和线程的区别</strong></p>
-<p>1、进程是资源分配的最小单位, 一个进程至少有一个线程.<br />
-2、线程是CPU调度的最小单位, 并发的最小单元.</p>
 <p><strong>智能指针</strong></p>
 <p><em><strong>make_shared</strong></em></p>
 <p><a href="https://www.jianshu.com/p/03eea8262c11" target="_blank" rel="noopener">make_shared</a></p>
@@ -475,7 +472,7 @@ java 中按值传递</p>
 <p><strong>NRVO</strong></p>
 <p>named return value optionmization</p>
 <p>通过直接返回一个变量, 会存在返回值优化.</p>
-<p>返回值, 存在分支判断, 会组织返回值优化, 在C++11之后会使用move语义转移出去. 之前会拷贝出去.</p>
+<p>返回值, 存在分支判断, 会阻止返回值优化, 在C++11之后会使用move语义转移出去. 之前会拷贝出去.</p>
 <p>std::move将会影响返回值优化.</p>
 <p><em><strong>引用坍缩</strong></em></p>
 <p>模版代码中针对T&amp;&amp;右值引用, 如果传递左值T&amp;, 参数会坍缩为左值引用.</p>
@@ -491,8 +488,7 @@ java 中按值传递</p>
 <p>最简单的单件使用局部静态变量, 在C++0X之后的编译器都是线程安全的.</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Instance&amp; <span class="title">GetInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Instance instance;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>java 使用volatile关键字解决此问题. java的编译器, 常规变量从内存拷贝到CPU缓存, 这关键字声明的变量, 保证每次读写变量都从内存中读写.<br />
-在生成的指令中插入了内存屏障指令, 避免指令重排.</p>
+<p>java 使用 volatile 关键字解决此问题. java 的编译器, 常规变量从内存拷贝到 CPU 缓存, 这关键字声明的变量, 保证每次读写变量都从内存中读写. java 在生成的指令中插入了内存屏障指令, 避免指令重排.</p>
 </blockquote>
 <p>C++11 之后修正了DCLP存在的问题, 使用新的写法来解决指令重排导致的问题.</p>
 <p><a href="https://preshing.com/20130930/double-checked-locking-is-fixed-in-cpp11/" target="_blank" rel="noopener">DCLP</a></p>
@@ -536,10 +532,95 @@ Cache Line 缓存行是缓存操作的最小单元</p>
 <li>处理器可以保证每个总线宽度的数据操作是原子性的.</li>
 </ul>
 <p><strong>总线锁</strong></p>
-<p>每个处理器从自己缓存中读取数据, 执行对应操作在回写到主内存的顺序如果没有使用内存屏障, 执行顺序不可预测</p>
+<p>每个处理器从自己缓存中读取数据, 如果没有使用内存屏障执行对应操作再回写到主内存的顺序不可预测.</p>
 <p>总线锁, 就是CPU使用#LOCK信号, 其它CPU的请求会被阻塞, 该处理器能够独立使用共享内存数据.</p>
 <p><strong>缓存锁定</strong></p>
-<p>CPU缓存行中内存区域数据在 #LOCK 操作期间被锁定, 缓存一致性机制会阻止被两个以上处理器同时修改缓存在内存区域的数据.</p>
+<p>CPU 缓存行中内存区域数据在 #LOCK 操作期间被锁定, 缓存一致性机制会阻止被两个以上处理器同时修改缓存在内存区域的数据.</p>
+<h2 id="无锁编程"><a class="markdownIt-Anchor" href="#无锁编程"></a> 无锁编程</h2>
+<h4 id="其它-2"><a class="markdownIt-Anchor" href="#其它-2"></a> 其它</h4>
+<p><strong>进程和线程的区别</strong></p>
+<p>1、进程是资源分配的最小单位, 一个进程至少有一个线程.<br />
+2、线程是CPU调度的最小单位, 并发的最小单元.</p>
+<p><em><strong>进程</strong></em></p>
+<ul>
+<li>每个进程独立的 <em><strong>虚拟</strong></em> 地址空间
+<ul>
+<li>环境变量</li>
+<li>进程启动参数</li>
+<li>每个线程的本地栈</li>
+<li>共享内存</li>
+<li>堆内存</li>
+<li>未初始化数据段(局部静态变量)</li>
+<li>初始化数据段(全局静态变量)</li>
+<li>代码</li>
+</ul>
+</li>
+<li>每个进程独立的文件描述符(文件、设备、套接字、句柄资源)</li>
+</ul>
+<p><em><strong>线程</strong></em></p>
+<ul>
+<li>线程必须依托进程来运行, 线程的本地变量函数栈属于进程地址空间的一部分.</li>
+<li>线程运行的代码在进程所属的进程地址空间中, 线程切换的上下文, 寄存器存储了执行下一条代码执行的地址.</li>
+<li>线程共享当前进程的所有资源数据.</li>
+<li>一个线程崩溃, 会导致整个进程崩溃, 正常一个进程崩溃不会影响整个操作系统.</li>
+</ul>
+<p>私有数据</p>
+<ul>
+<li>线程ID(唯一线程标识符)</li>
+<li>线程上下文</li>
+<li>本地线程存储</li>
+<li>每个线程有自己独立的优先级</li>
+<li>每个线程本地栈</li>
+</ul>
+<blockquote>
+<p>系统调用, 只是在进程内将用户态切换到内核态, 然后再切换回来, 主要涉及调用时间消耗以外的就是把内核态获取的数据, 返回到用户态内存占用耗时.<br />
+CPU 按时间流水分片调度执行线程, 每个时间片会切换获取执行的代码、数据、资源等.</p>
+</blockquote>
+<p><strong>上下文切换</strong></p>
+<p>进程上下文切换:</p>
+<p>1、切换页表全局目录<br />
+2、切换内核态堆栈<br />
+3、切换硬件上下文, 寄存器存储的数据, 执行指令的地址、函数栈帧等<br />
+4、刷新<a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer" target="_blank" rel="noopener">TLB-页表缓存</a><br />
+5、系统调度器代码执行</p>
+<blockquote>
+<p>整体进程上下文切换, 大约会导致2.5-5.0微妙的时间消耗.</p>
+</blockquote>
+<p>线程上下文切换:</p>
+<p>同个进程下的线程, 共享同一个地址空间、代码段、全局变量、文件资源集合</p>
+<p>1、同个进程中的线程, 上下文切换不会刷新TLB, <a href="https://en.wikipedia.org/wiki/Native_POSIX_Thread_Library" target="_blank" rel="noopener">NPTL</a><br />
+2、Linux2.6之前, 内核本质上是没有线程概念的, 之后才有了线程, 线程上下文切换比进程上下文切换快, 但是仍然会消耗非常多的时间, 线程上下文切换大约也是在1微妙的时间.</p>
+<blockquote>
+<p>线程上下文切换, 仍然是接近毫秒级别的. 了解了上下文切换开销后, 在无锁编程的过程中会更明白为什么乐观锁, 在数据激烈竞争的情况下, 反而可能不如悲观锁性能更高, 而且, 现在最新的std::mutex内部会先进行CAS原子操作, 在一定循环次数之后才会退化到锁操作.</p>
+</blockquote>
+<p><a href="https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html" target="_blank" rel="noopener">参考文档</a><br />
+<a href="https://www.cnblogs.com/alantu2018/p/9000777.html" target="_blank" rel="noopener">TLB作用和原理</a></p>
+<p><strong>指令分析</strong></p>
+<p><a href="https://www.cnblogs.com/zsql/p/11643750.html" target="_blank" rel="noopener">vmstat</a><br />
+<a href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/sar.html" target="_blank" rel="noopener">sar</a></p>
+<p><strong>std::this_thread::yield()</strong></p>
+<p>1、std::this_thread::yield() 告诉内核调度器, 如果其它[线程]等待CPU执行, 则把CPU让出时间片, 让其它[线程]执行. 通常Sleep休眠会导致代码休眠指定时间后在调度执行.</p>
+<blockquote>
+<p>扩展问题, 是否会导致进程上下文切换, 如果会导致进程上下文切换, 那就非常慢?<br />
+在让出CPU时间片, 出现线程上下文切换, 这个会导致超过1微妙的时间, 这样是否会导致无锁编程消耗的时间变得更长?</p>
+</blockquote>
+<p><strong>SwitchToThread</strong></p>
+<p>1、 这个是Window上的API, <a href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-switchtothread" target="_blank" rel="noopener">SwitchToThread</a> 使调用线程将执行权交给另一个准备在当前处理器上运行的线程。操作系统选择下一个要执行的线程。</p>
+<ul>
+<li>如果调用 SwitchToThread 函数导致操作系统将执行切换到另一个线程，则返回值为非零。</li>
+<li>如果没有其他线程可以执行，则操作系统不会将执行切换到另一个线程，并且返回值为零。</li>
+</ul>
+<blockquote>
+<p>std::this_thread::yield() 在Window的实现底层调用的就是SwitchToThread, Mac上是sched_yield, Linux上是pthread_yield<br />
+Sleep(0) 时间片只能让给优先级相同或更高的线程；***这只是针对XP系统, 之后的系统已经等价于 SwitchToThread ***<br />
+让出时间片的操作可以让低优先级的线程也会被调用.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ngx_sched_yield()  sched_yield()</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ngx_sched_yield()  SwitchToThread()</span></span><br><span class="line"></span><br><span class="line">__asm</span><br><span class="line">&#123;</span><br><span class="line">    pause</span><br><span class="line">&#125;</span><br><span class="line">__asm__ (<span class="string">"pause"</span>)</span><br><span class="line">__asm__ (<span class="string">".byte 0xf3, 0x90"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">ngx_uint_t</span>  i, n;</span><br><span class="line"><span class="keyword">for</span> ( ;; ) &#123;</span><br><span class="line">    <span class="keyword">if</span> (*lock == <span class="number">0</span> &amp;&amp; ngx_atomic_cmp_set(lock, <span class="number">0</span>, NGX_RWLOCK_WLOCK)) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (ngx_ncpu &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (n = <span class="number">1</span>; n &lt; NGX_RWLOCK_SPIN; n &lt;&lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">                ngx_cpu_pause();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (*lock == <span class="number">0</span></span><br><span class="line">                &amp;&amp; ngx_atomic_cmp_set(lock, <span class="number">0</span>, NGX_RWLOCK_WLOCK))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ngx_sched_yield();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em><strong>没有看过NGINX代码的时候自己写出来的, 思路基本是一样的</strong></em></p>
+<img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/Lock.png" class="" title="HashMap">
+<blockquote>
+<p>个人觉得很多自旋锁的实现, 在失败之后马上就执行让出CPU时间片是非常愚蠢的做法, 执行让出时间片, 如果没切换还好, 一旦切换上下文, 无论是进程上下文还是线程的都会导致大量的性能消耗, 而且, 一般我们使用CAS机制的锁的时候, 一般都是一些快速执行的代码, 这些代码都是设计成纳秒的速度执行完成的代码, 只有极少的情况会导致超过循环时间.</p>
+</blockquote>
 <h2 id="顺序容器"><a class="markdownIt-Anchor" href="#顺序容器"></a> 顺序容器</h2>
 <p><strong>string</strong></p>
 <p>模版basic_string对于char类型的特化, 只存放字符类型的容器.</p>
@@ -877,7 +958,7 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
 <blockquote>
 <p>空间复杂度, 涉及算法需要额外使用的空间大小.</p>
 </blockquote>
-<p><font color="#DD0000" style="font-weight:bold;">留个问题: 操作系统给线程分配的内存空间作为栈空间, 这个是固定大小的顺序空间么?<font></p>
+<p><font color="#DD0000" style="font-weight:bold;">留个问题: 操作系统给线程分配的内存空间作为栈空间, 这个是固定大小的顺序空间么?</font></p>
 <p><strong>表达式计数</strong></p>
 <p>通过2个栈来处理, 其中一个栈保存操作数, 另外一个栈保存操作符, 遇到数值进入操作数栈, 遇到操作符号, 比较操作符栈顶元素优先级, 如果优先级高那么入栈, 如果低或者相同, 弹出2个操作数和操作符入栈, 把计算结果保存到操作数栈中.</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -885,13 +966,165 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
 2个栈处理类似于浏览器前进后退问题.<br />
 栈解决临时变量作用域问题.</p>
 <h2 id="队列"><a class="markdownIt-Anchor" href="#队列"></a> 队列</h2>
+<p>先进先出模式, 典型队列结构. 队列和栈一样都是一种受限结构的线性表结构.</p>
+<p>常见队列</p>
+<ul>
+<li>循环队列</li>
+<li>阻塞队列</li>
+<li>并发队列</li>
+</ul>
+<p>实现模式</p>
+<ul>
+<li><a href="https://www.cs.usfca.edu/~galles/visualization/QueueArray.html" target="_blank" rel="noopener">数组实现-顺序队列</a></li>
+<li><a href="https://www.cs.usfca.edu/~galles/visualization/QueueLL.html" target="_blank" rel="noopener">链表实现-链式队列</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Java Queue</th>
+<th>bounded</th>
+<th>Locked</th>
+<th>Data Struct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ArrayBlockingQueue</td>
+<td>bounded</td>
+<td>With Locked</td>
+<td>ArrayList</td>
+</tr>
+<tr>
+<td>LinkedBlockingQueue</td>
+<td>optionally-bounded</td>
+<td>With Locked</td>
+<td>LinkedList</td>
+</tr>
+<tr>
+<td>ConcurrentLinkedQueue</td>
+<td>unbounded</td>
+<td>No Locked</td>
+<td>LinkedList</td>
+</tr>
+<tr>
+<td>LinkedTransferQueue</td>
+<td>unbounded</td>
+<td>No Locked</td>
+<td>LinkedList</td>
+</tr>
+<tr>
+<td>PriorityBlockingQueue</td>
+<td>unbounded</td>
+<td>With Locked</td>
+<td>Heap</td>
+</tr>
+<tr>
+<td>DelayQueue</td>
+<td>unbounded</td>
+<td>With Locked</td>
+<td>Heap</td>
+</tr>
+</tbody>
+</table>
 <p><strong>循环并发队列</strong></p>
-<p>(Disruptor)[<a href="https://leiyiming.com/2017/11/01/disruptor/" target="_blank" rel="noopener">https://leiyiming.com/2017/11/01/disruptor/</a>]</p>
+<p>(Linux环型缓存)[<a href="https://en.wikipedia.org/wiki/Circular_buffer" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Circular_buffer</a>]<br />
+(Disruptor)[<a href="https://leiyiming.com/2017/11/01/disruptor/" target="_blank" rel="noopener">https://leiyiming.com/2017/11/01/disruptor/</a>]</p>
+<h2 id="递归"><a class="markdownIt-Anchor" href="#递归"></a> 递归</h2>
+<p>递归是一种编程技巧, 也是一种思维方式, DFS深度优先搜索主要就使用递归.</p>
+<ul>
+<li>问题可以被分解成子问题</li>
+<li>子问题的求解方式都相同</li>
+<li>存在终止条件</li>
+</ul>
+<p>走台阶问题</p>
+<ul>
+<li>第一类是第一步走了 1 个台阶，另一类是第一步走了 2 个台阶。所以 n 个台阶的走法就等于先走 1 阶后，n-1 个台阶的走法 加上先走 2 阶后，n-2 个台阶的走法。 f(n) = f(n-1) + f(n-2)</li>
+<li>f(1) = 1</li>
+<li>f(2) = 2 2个台阶一次走2步, 或者分别走1步.</li>
+<li>通过总结的公式转换成代码.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 递归实现</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">CalcResult</span><span class="params">(<span class="keyword">int</span> nCount)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (nCount == <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (nCount == <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> CalcResult(n - <span class="number">1</span>) + f(n - <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 展开实现</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">CalcResult</span><span class="params">(<span class="keyword">int</span> nCount)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (nCount == <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (nCount == <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> pre = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> prepre = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= n; ++i) &#123; ret = pre + prepre; prepre = pre; pre = ret; &#125; <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>递归需要注意的问题</p>
+<ul>
+<li>堆栈溢出, 控制递归的深度</li>
+<li>重复计算, 散列表存储已经求解过的函数值.</li>
+</ul>
+<p>遗留问题: 如何检查递归循环问题.</p>
+<h2 id="排序"><a class="markdownIt-Anchor" href="#排序"></a> <a href="https://visualgo.net/zh/sorting" target="_blank" rel="noopener">排序</a></h2>
+<p>分析算法的时候, 不能简单的考虑时间复杂度, 就认为算法的性能是一样的, 需要如下分析:</p>
+<ul>
+<li>时间复杂度最好, 最坏, 平均情况下的复杂度情况.</li>
+<li>通用的时间复杂度都是忽略了常量、低价、系数部分, 但是实际场景下n的数值规模并不会特别大, 不同算法, 在这情况下时间复杂度曲线是存在差异的.</li>
+<li>输入数据的有效性也影响算法, 比如, 在排序算法中输入数据是接近有序还是完全无序的都会影响算法的执行时间.</li>
+<li>还要增对算法分析数据的比较、移动次数、空间复杂度的差异来最终决定使用那种算法是比较合适的.</li>
+<li>最后一个就是算法的稳定性, 比如在排序算法中, 对于相等元素在排序之后, 元素的先后顺序是否是不变的.</li>
+</ul>
+<blockquote>
+<p>稳定排序算法可以保持键值相同的两个对象，在排序之后的前后顺序不变。<code>std::sort</code>是不稳定排序算法.</p>
+</blockquote>
+<p><strong>冒泡排序</strong></p>
+<p>冒泡排序只会操作相邻的两个数据。每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求。如果不满足就让它俩互换。一次冒泡会让至少一个元素移动到它应该在的位置，重复 n 次，就完成了 n 个数据的排序工作。</p>
+<p><strong>插入排序</strong></p>
+<p>数组分为已排序区间和未排序区间。初始已排序区间只有一个元素，就是数组的第一个元素。插入算法的核心思想是取未排序区间中的元素，在已排序区间中找到合适的插入位置将其插入，并保证已排序区间数据一直有序。</p>
+<p><strong>希尔排序</strong></p>
+<p>递减增量排序算法，插入排序的改进版本，希尔排序是不稳定排序算法。</p>
+<p><strong>选择排序</strong></p>
+<p>数组分为已排序区间和未排序区间。选择排序每次从未排序区间找出最小的进行交换，选择排序是不稳定排序。</p>
+<p><strong>归并排序</strong></p>
+<p>归并排序是稳定排序, 非原地排序, 需要额外的空间复杂度.</p>
+<p>合并数组的核心思想:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 归并排序下, 哨兵模式数据合并, 不需要判断边界.</span></span><br><span class="line"><span class="comment">// #include &lt;climits&gt; INT_MAX</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge_array</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arrayLeft[<span class="number">6</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">115</span>, INT_MAX&#125;;</span><br><span class="line">    <span class="keyword">int</span> arrayRight[<span class="number">5</span>] = &#123;<span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>, INT_MAX&#125;;</span><br><span class="line">    <span class="keyword">int</span> arrayResult[<span class="number">9</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">long</span> k = <span class="number">0</span>, i = <span class="number">0</span>, j = <span class="number">0</span>; k &lt; <span class="keyword">sizeof</span>(arrayResult)/<span class="keyword">sizeof</span>(arrayResult[<span class="number">0</span>]); ++k)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (arrayLeft[i] &lt; arrayRight[j])</span><br><span class="line">        &#123;</span><br><span class="line">            arrayResult[k] = arrayLeft[i];</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            arrayResult[k] = arrayRight[j];</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>快速排序</strong></p>
+<p>快排是原地, 非稳定排序算法.</p>
+<p><strong>桶排序</strong></p>
+<p><strong>计数排序</strong></p>
+<p><strong>基数排序</strong></p>
+<h2 id="查找算法"><a class="markdownIt-Anchor" href="#查找算法"></a> 查找算法</h2>
+<p><strong>二分查找</strong></p>
+<p><strong>变形二分查找场景</strong></p>
+<h2 id="跳表"><a class="markdownIt-Anchor" href="#跳表"></a> 跳表</h2>
+<p>跳表（链表加多级索引的结构）可以支持快速地插入、删除、查找操作，动态数据结构.</p>
+<h2 id="散列函数"><a class="markdownIt-Anchor" href="#散列函数"></a> 散列函数</h2>
+<p><strong>开放寻址法</strong></p>
+<p><strong>二次探测</strong></p>
+<p><strong>双重散列</strong></p>
+<p><strong>链表法</strong></p>
+<p><strong>一致性哈希算法</strong></p>
 <h2 id="树"><a class="markdownIt-Anchor" href="#树"></a> 树</h2>
-<h3 id="前缀树-trie-prefix-tree"><a class="markdownIt-Anchor" href="#前缀树-trie-prefix-tree"></a> 前缀树 Trie (Prefix tree)</h3>
+<h3 id="二叉数"><a class="markdownIt-Anchor" href="#二叉数"></a> 二叉数</h3>
+<p><strong>满二叉树</strong></p>
+<p><strong>完全二叉树</strong></p>
+<p>完全二叉树, 可以通过数组来存储.</p>
+<p><strong>遍历</strong></p>
+<ul>
+<li>前序遍历是指，对于树中的任意节点来说，先打印这个节点，然后再打印它的左子树，最后打印它的右子树。</li>
+<li>中序遍历是指，对于树中的任意节点来说，先打印它的左子树，然后再打印它本身，最后打印它的右子树。</li>
+<li>后序遍历是指，对于树中的任意节点来说，先打印它的左子树，然后再打印它的右子树，最后打印这个节点本身。</li>
+</ul>
+<p><strong>二叉查找树</strong></p>
+<p>在树中的任意一个节点，其左子树中的每个节点的值，都要小于这个节点的值，而右子树节点的值都大于这个节点的值。</p>
+<p><strong>平衡二叉树</strong></p>
+<p>平衡二叉查找树中“平衡”的意思，其实就是让整棵树左右看起来比较“对称”、比较“平衡”，不要出现左子树很高、右子树很矮的情况。这样就能让整棵树的高度相对来说低一些，相应的插入、删除、查找等操作的效率高一些。</p>
+<p><strong>红黑树</strong></p>
+<ul>
+<li>根节点是黑色的；</li>
+<li>每个叶子节点都是黑色的空节点（NIL）；</li>
+<li>如果一个节点是黑色, 它的叶子节点必定全黑；</li>
+<li>任何相邻的节点都不能同时为红色，也就是说，红色节点是被黑色节点隔开的；</li>
+<li>每个节点，从该节点到达其可达叶子节点的所有路径，都包含相同数目的黑色节点；</li>
+</ul>
+<img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/Black_Red_Tree.png" class="" title="红黑树">
+<p><strong>B树</strong></p>
+<p><strong>B+树</strong></p>
+<p><strong>前缀树 Trie (Prefix tree)</strong></p>
 <img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/Trie.gif" class="" title="Trie">
-<h3 id="基数树-radix-tree"><a class="markdownIt-Anchor" href="#基数树-radix-tree"></a> 基数树 (Radix tree)</h3>
+<p><strong>基数树 (Radix tree)</strong></p>
 <img src="/2021/01/08/%E5%9F%BA%E7%A1%80%E5%B8%B8%E8%AF%86/Patricia_trie.png" class="" title="压缩前缀树">
+<h2 id="图"><a class="markdownIt-Anchor" href="#图"></a> 图</h2>
+<p><strong>邻阶矩阵</strong></p>
+<p><strong>邻阶表</strong></p>
+<p><strong>广度优先搜索(BFS)</strong></p>
+<p><strong>深度优先搜索(DFS)</strong></p>
 <h2 id="外部排序"><a class="markdownIt-Anchor" href="#外部排序"></a> 外部排序</h2>
 <h3 id="多路归并排序"><a class="markdownIt-Anchor" href="#多路归并排序"></a> 多路归并排序</h3>
 
